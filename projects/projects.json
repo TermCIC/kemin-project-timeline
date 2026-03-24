@@ -1,0 +1,87 @@
+{
+  "Study 2: CMU Research Agreement": {
+    "summary": "Research agreement with Chiang Mai University for screening chemicals against Sitophilus zeamais, Tribolium sp., and Suidasia pontifica under the October 20, 2025 agreement and Statement of Work 1 performance period.",
+    "tasks": [
+      {
+        "id": "S2-001",
+        "desc": "Agreement execution and initial 50% payment release",
+        "owner": "Kemin / CMU",
+        "due": "2025-10-27",
+        "status": "Completed"
+      },
+      {
+        "id": "S2-002",
+        "desc": "Ship 8 proprietary materials to Chiang Mai University",
+        "owner": "Kemin",
+        "due": "2025-10-25",
+        "status": "Completed"
+      },
+      {
+        "id": "S2-003",
+        "desc": "Conduct bioassay research program at CMU facilities",
+        "owner": "CMU - Asst. Prof. Chun-I Chiu",
+        "due": "2026-03-31",
+        "status": "In Progress"
+      },
+      {
+        "id": "S2-004",
+        "desc": "Complete project work and trigger 25% completion payment",
+        "owner": "Kemin / CMU",
+        "due": "2026-03-31",
+        "status": "Pending"
+      },
+      {
+        "id": "S2-005",
+        "desc": "Submit final report with raw data, statistics, and summary tables",
+        "owner": "CMU",
+        "due": "2026-04-30",
+        "status": "Pending"
+      }
+    ]
+  },
+  "Kemin Batch 2": {
+    "summary": "Batch 2 is still in delivery buildout, with field preparation active and downstream quality work scheduled across May.",
+    "tasks": [
+      {
+        "id": "T-201",
+        "desc": "Prepare field setup",
+        "owner": "Team A",
+        "due": "2026-05-02",
+        "status": "In Progress"
+      },
+      {
+        "id": "T-202",
+        "desc": "Perform QC checks",
+        "owner": "Team B",
+        "due": "2026-05-15",
+        "status": "Pending"
+      },
+      {
+        "id": "T-203",
+        "desc": "Review trial summary",
+        "owner": "Team C",
+        "due": "2026-05-30",
+        "status": "Pending"
+      }
+    ]
+  },
+  "Kemin Special Project": {
+    "summary": "The special project is focused on contract validation and final reporting, with a smaller task set but tighter executive visibility.",
+    "tasks": [
+      {
+        "id": "T-301",
+        "desc": "Verify contract items",
+        "owner": "Team D",
+        "due": "2026-06-10",
+        "status": "In Progress"
+      },
+      {
+        "id": "T-302",
+        "desc": "Submit final report",
+        "owner": "Team E",
+        "due": "2026-06-25",
+        "status": "Pending"
+      }
+    ]
+  }
+}
