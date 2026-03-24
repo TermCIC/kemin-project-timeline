@@ -54,11 +54,6 @@
             font-family: "Space Grotesk", sans-serif;
         }
 
-        .dashboard {
-            display: grid;
-            gap: 24px;
-        }
-
         .panel {
             background: var(--panel);
             border: 1px solid rgba(255, 255, 255, 0.6);
@@ -69,14 +64,6 @@
 
         .panel-inner {
             padding: 28px;
-        }
-
-        .section-head {
-            display: flex;
-            justify-content: space-between;
-            gap: 16px;
-            align-items: end;
-            margin-bottom: 22px;
         }
 
         .section-title {
@@ -90,17 +77,12 @@
             line-height: 1.6;
         }
 
-        .overview-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
-            gap: 20px;
-        }
-
         .project-card {
             background: var(--panel-strong);
             border: 1px solid var(--line);
             border-radius: var(--radius-lg);
             padding: 22px;
+            margin-bottom: 22px;
         }
 
         .project-name {
@@ -141,7 +123,9 @@
 
         .metrics-grid {
             display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 14px;
+            margin-top: 18px;
         }
 
         .metric-card {
@@ -175,6 +159,16 @@
             gap: 14px;
             align-items: center;
             margin-bottom: 22px;
+        }
+
+        .page-title {
+            margin-bottom: 6px;
+        }
+
+        .page-copy {
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 18px;
         }
 
         .field {
@@ -342,7 +336,7 @@
         }
 
         @media (max-width: 980px) {
-            .overview-grid {
+            .metrics-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -368,7 +362,6 @@
                 min-width: 760px;
             }
 
-            .section-head,
             .progress-meta {
                 flex-direction: column;
                 align-items: flex-start;
@@ -378,89 +371,69 @@
 </head>
 <body>
     <div class="shell">
-        <main class="dashboard">
+        <main>
             <section class="panel">
                 <div class="panel-inner">
-                    <div class="section-head">
-                        <div>
-                            <h2 class="section-title">Project overview</h2>
-                            <p class="section-copy">
-                                Each project view combines summary metrics, ownership details, and the current task list so the site reads like an operating dashboard instead of a static table.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="overview-grid">
-                        <article class="project-card">
-                            <div class="project-name" id="projectName">Study 2: CMU Research Agreement</div>
-                            <p class="project-summary" id="projectSummary"></p>
-                            <div class="detail-list">
-                                <div class="detail-item">
-                                    <div class="detail-label">Primary owner</div>
-                                    <div class="detail-value" id="primaryOwner"></div>
-                                </div>
-                                <div class="detail-item">
-                                    <div class="detail-label">Next due date</div>
-                                    <div class="detail-value" id="nextDueDate"></div>
-                                </div>
-                                <div class="detail-item">
-                                    <div class="detail-label">Completion pace</div>
-                                    <div class="detail-value" id="completionPace"></div>
-                                </div>
-                                <div class="detail-item">
-                                    <div class="detail-label">Open actions</div>
-                                    <div class="detail-value" id="openActions"></div>
-                                </div>
-                            </div>
-
-                            <div class="progress-track" aria-hidden="true">
-                                <div class="progress-fill" id="progressFill"></div>
-                            </div>
-                            <div class="progress-meta">
-                                <span id="progressLabel">Overall completion</span>
-                                <span id="progressValue">0%</span>
-                            </div>
-                        </article>
-
-                        <aside class="metrics-grid">
-                            <div class="metric-card">
-                                <div class="metric-label">Total tasks</div>
-                                <div class="metric-value" id="metricTotal">0</div>
-                                <div class="metric-subtext">All tasks currently listed for the selected project.</div>
-                            </div>
-                            <div class="metric-card">
-                                <div class="metric-label">Completed</div>
-                                <div class="metric-value" id="metricCompleted">0</div>
-                                <div class="metric-subtext">Closed work items ready for reporting or handoff.</div>
-                            </div>
-                            <div class="metric-card">
-                                <div class="metric-label">At risk</div>
-                                <div class="metric-value" id="metricAtRisk">0</div>
-                                <div class="metric-subtext">In progress or pending tasks that still need attention.</div>
-                            </div>
-                        </aside>
-                    </div>
-                </div>
-            </section>
-
-            <section class="panel">
-                <div class="panel-inner">
-                    <div class="section-head">
-                        <div>
-                            <h2 class="section-title">Trial task board</h2>
-                            <p class="section-copy">
-                                Switch projects to update the table, summary strip, and progress state. The layout is optimized for both quick scanning and detail review.
-                            </p>
-                        </div>
-                    </div>
+                    <h1 class="section-title page-title">Kemin Project Timeline</h1>
+                    <p class="page-copy">Select a project, review its key information, and track the current status of each task.</p>
 
                     <div class="toolbar">
                         <div class="field">
                             <label for="projectSelect">Choose project</label>
                             <select id="projectSelect" aria-label="Choose a project"></select>
                         </div>
-                        <div class="status-strip" id="statusStrip" aria-label="Project status summary"></div>
                     </div>
+
+                    <article class="project-card">
+                        <div class="project-name" id="projectName">Study 2: CMU Research Agreement</div>
+                        <p class="project-summary" id="projectSummary"></p>
+                        <div class="detail-list">
+                            <div class="detail-item">
+                                <div class="detail-label">Primary owner</div>
+                                <div class="detail-value" id="primaryOwner"></div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Next due date</div>
+                                <div class="detail-value" id="nextDueDate"></div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Completion pace</div>
+                                <div class="detail-value" id="completionPace"></div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Open actions</div>
+                                <div class="detail-value" id="openActions"></div>
+                            </div>
+                        </div>
+
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-label">Total tasks</div>
+                                <div class="metric-value" id="metricTotal">0</div>
+                                <div class="metric-subtext">All tasks currently listed for this project.</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Completed</div>
+                                <div class="metric-value" id="metricCompleted">0</div>
+                                <div class="metric-subtext">Closed work items ready for reporting.</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">At risk</div>
+                                <div class="metric-value" id="metricAtRisk">0</div>
+                                <div class="metric-subtext">Tasks still pending or in progress.</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-track" aria-hidden="true">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-meta">
+                            <span>Overall completion</span>
+                            <span id="progressValue">0%</span>
+                        </div>
+                    </article>
+
+                    <div class="status-strip" id="statusStrip" aria-label="Project status summary"></div>
 
                     <div class="table-shell">
                         <table>
