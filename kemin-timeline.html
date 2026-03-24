@@ -391,18 +391,18 @@
                     <article class="project-card">
                         <div class="project-name" id="projectName">Study 2: CMU Research Agreement</div>
                         <p class="project-summary" id="projectSummary"></p>
-                        <div class="detail-list">
-                            <div class="detail-item">
-                                <div class="detail-label">Primary owner</div>
-                                <div class="detail-value" id="primaryOwner"></div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Next due date</div>
-                                <div class="detail-value" id="nextDueDate"></div>
-                            </div>
-                            <div class="detail-item">
-                                <div class="detail-label">Completion pace</div>
-                                <div class="detail-value" id="completionPace"></div>
+                            <div class="detail-list">
+                                <div class="detail-item">
+                                <div class="detail-label">Scheduled start</div>
+                                <div class="detail-value" id="scheduledStart"></div>
+                                </div>
+                                <div class="detail-item">
+                                <div class="detail-label">Expected finish</div>
+                                <div class="detail-value" id="expectedFinish"></div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Completion pace</div>
+                                    <div class="detail-value" id="completionPace"></div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label">Open actions</div>
@@ -443,10 +443,11 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th scope="col">Task ID</th>
-                                    <th scope="col">Task description</th>
-                                    <th scope="col">Assigned to</th>
-                                    <th scope="col">Due date</th>
+                                    <th scope="col">Experiment ID</th>
+                                    <th scope="col">Subject</th>
+                                    <th scope="col">Trial type</th>
+                                    <th scope="col">Scheduled date</th>
+                                    <th scope="col">Expected finish</th>
                                     <th scope="col">Status</th>
                                 </tr>
                             </thead>
@@ -479,8 +480,8 @@
         const statusStrip = document.getElementById("statusStrip");
         const projectName = document.getElementById("projectName");
         const projectSummary = document.getElementById("projectSummary");
-        const primaryOwner = document.getElementById("primaryOwner");
-        const nextDueDate = document.getElementById("nextDueDate");
+        const scheduledStart = document.getElementById("scheduledStart");
+        const expectedFinish = document.getElementById("expectedFinish");
         const completionPace = document.getElementById("completionPace");
         const openActions = document.getElementById("openActions");
         const metricTotal = document.getElementById("metricTotal");
@@ -501,8 +502,8 @@
             projectSelect.innerHTML = '<option value="">Unable to load projects</option>';
             projectName.textContent = "Project data unavailable";
             projectSummary.textContent = message;
-            primaryOwner.textContent = "-";
-            nextDueDate.textContent = "-";
+            scheduledStart.textContent = "-";
+            expectedFinish.textContent = "-";
             completionPace.textContent = "-";
             openActions.textContent = "-";
             metricTotal.textContent = "0";
@@ -527,22 +528,20 @@
                 return accumulator;
             }, { total: 0, completed: 0, inProgress: 0, pending: 0 });
 
-            const nextTask = [...tasks]
-                .filter(task => task.status !== "Completed")
-                .sort((a, b) => new Date(a.due) - new Date(b.due))[0];
+            const sortedByScheduledDate = [...tasks]
+                .filter(task => task.scheduled_date)
+                .sort((a, b) => new Date(a.scheduled_date) - new Date(b.scheduled_date));
 
-            const ownerCount = tasks.reduce((owners, task) => {
-                owners[task.owner] = (owners[task.owner] || 0) + 1;
-                return owners;
-            }, {});
+            const sortedByExpectedFinish = [...tasks]
+                .filter(task => task.expected_finish_date)
+                .sort((a, b) => new Date(a.expected_finish_date) - new Date(b.expected_finish_date));
 
-            const primaryOwnerEntry = Object.entries(ownerCount).sort((a, b) => b[1] - a[1])[0];
             const completionPercent = counts.total ? Math.round((counts.completed / counts.total) * 100) : 0;
 
             return {
                 ...counts,
-                nextTask,
-                primaryOwner: primaryOwnerEntry ? primaryOwnerEntry[0] : "Unassigned",
+                projectStart: sortedByScheduledDate[0] || null,
+                projectFinish: sortedByExpectedFinish[sortedByExpectedFinish.length - 1] || null,
                 completionPercent,
                 atRisk: counts.inProgress + counts.pending
             };
@@ -562,15 +561,16 @@
                 return;
             }
 
-            trialTableBody.innerHTML = tasks.map(task => `
+                trialTableBody.innerHTML = tasks.map(task => `
                 <tr>
-                    <td><span class="task-code">${task.id}</span></td>
+                    <td><span class="task-code">${task.experiment_id}</span></td>
                     <td>
-                        <div class="task-desc">${task.desc}</div>
+                        <div class="task-desc">${task.subject}</div>
                         <div class="task-note">Scheduled under the selected Kemin project workflow.</div>
                     </td>
-                    <td>${task.owner}</td>
-                    <td>${formatDate(task.due)}</td>
+                    <td>${task.trial_type}</td>
+                    <td>${formatDate(task.scheduled_date)}</td>
+                    <td>${formatDate(task.expected_finish_date)}</td>
                     <td><span class="status-badge ${statusClassMap[task.status]}">${task.status}</span></td>
                 </tr>
             `).join("");
@@ -583,8 +583,8 @@
 
             projectName.textContent = projectKey;
             projectSummary.textContent = project.summary || "No project summary available.";
-            primaryOwner.textContent = stats.primaryOwner;
-            nextDueDate.textContent = stats.nextTask ? formatDate(stats.nextTask.due) : "No upcoming due date";
+            scheduledStart.textContent = stats.projectStart ? formatDate(stats.projectStart.scheduled_date) : "No scheduled date";
+            expectedFinish.textContent = stats.projectFinish ? formatDate(stats.projectFinish.expected_finish_date) : "No expected finish";
             completionPace.textContent = `${stats.completionPercent}% complete`;
             openActions.textContent = `${stats.atRisk} active follow-ups`;
             metricTotal.textContent = String(stats.total);
