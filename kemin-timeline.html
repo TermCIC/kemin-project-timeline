@@ -15,6 +15,7 @@
             --panel-strong: #ffffff;
             --line: rgba(27, 34, 48, 0.1);
             --brand: #134e4a;
+            --brand-strong: #0f3f3c;
             --brand-soft: #dff3ec;
             --accent: #c26a2d;
             --completed: #147d64;
@@ -289,6 +290,7 @@
             height: 34px;
             margin-top: 14px;
             border-top: 1px solid rgba(27, 34, 48, 0.08);
+            overflow: visible;
         }
 
         .timeline-tick {
@@ -301,10 +303,19 @@
         .timeline-tick-label {
             position: absolute;
             top: 8px;
+            left: 0;
             transform: translateX(-50%);
             font-size: 0.78rem;
             color: var(--muted);
             white-space: nowrap;
+        }
+
+        .timeline-tick-label.edge-start {
+            transform: translateX(0);
+        }
+
+        .timeline-tick-label.edge-end {
+            transform: translateX(-100%);
         }
 
         .timeline-rows {
@@ -464,6 +475,24 @@
         .status-pending {
             background: rgba(107, 114, 128, 0.14);
             color: var(--pending);
+        }
+
+        .report-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: var(--brand);
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.84rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .report-link:hover {
+            background: var(--brand-strong);
         }
 
         .progress-track {
@@ -636,12 +665,13 @@
                                     <th scope="col">Scheduled date</th>
                                     <th scope="col">Expected finish</th>
                                     <th scope="col">Cost</th>
+                                    <th scope="col">Report</th>
                                     <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             <tbody id="trialTableBody">
                                 <tr>
-                                    <td colspan="8" class="empty-state">Choose a project from the dropdown to view its task board.</td>
+                                    <td colspan="9" class="empty-state">Choose a project from the dropdown to view its task board.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -712,7 +742,7 @@
                 </div>
                 <div class="empty-state error-text">Unable to render the task timeline.</div>
             `;
-            trialTableBody.innerHTML = '<tr><td colspan="8" class="empty-state error-text">Unable to load project data from projects/projects.json.</td></tr>';
+            trialTableBody.innerHTML = '<tr><td colspan="9" class="empty-state error-text">Unable to load project data from projects/projects.json.</td></tr>';
         }
 
         function getProjectStats(tasks) {
@@ -794,7 +824,8 @@
                 const tickTime = new Date(minTime + totalSpan * ratio);
                 return {
                     left: ratio * 100,
-                    label: tickTime.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+                    label: tickTime.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+                    labelClass: index === 0 ? "edge-start" : index === tickCount - 1 ? "edge-end" : ""
                 };
             });
 
@@ -827,7 +858,7 @@
                     <div class="timeline-scale">
                         ${ticks.map(tick => `
                             <div class="timeline-tick" style="left:${tick.left}%;">
-                                <span class="timeline-tick-label">${tick.label}</span>
+                                <span class="timeline-tick-label ${tick.labelClass}">${tick.label}</span>
                             </div>
                         `).join("")}
                     </div>
@@ -838,7 +869,7 @@
 
         function renderTable(tasks) {
             if (!tasks.length) {
-                trialTableBody.innerHTML = '<tr><td colspan="8" class="empty-state">No tasks available for this project.</td></tr>';
+                trialTableBody.innerHTML = '<tr><td colspan="9" class="empty-state">No tasks available for this project.</td></tr>';
                 return;
             }
 
@@ -854,6 +885,7 @@
                     <td>${formatDate(task.scheduled_date)}</td>
                     <td>${formatDate(task.expected_finish_date)}</td>
                     <td>${task.cost || "-"}</td>
+                    <td>${task.report_url ? `<a class="report-link" href="${task.report_url}" target="_blank" rel="noopener noreferrer">Open Report</a>` : "-"}</td>
                     <td><span class="status-badge ${statusClassMap[task.status]}">${task.status}</span></td>
                 </tr>
             `).join("");

@@ -21,6 +21,7 @@
       "scheduled_date": "2025-11-20",
       "expected_finish_date": "2025-11-18",
       "cost": "THB 10,720.00",
+      "report_url": "./reports/SP1-001-report.pdf",
       "status": "Completed"
     },
     {

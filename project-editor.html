@@ -409,6 +409,10 @@
                     <label>Cost</label>
                     <input class="task-cost" type="text" placeholder="THB 83,622.00">
                 </div>
+                <div class="field wide">
+                    <label>Report URL</label>
+                    <input class="task-report-url" type="text" placeholder="./reports/SP1-001-report.pdf">
+                </div>
                 <div class="field">
                     <label>Status</label>
                     <select class="task-status">
@@ -492,6 +496,7 @@
                 scheduled_date: card.querySelector(".task-scheduled-date").value,
                 expected_finish_date: card.querySelector(".task-expected-finish-date").value,
                 cost: card.querySelector(".task-cost").value.trim(),
+                report_url: card.querySelector(".task-report-url").value.trim(),
                 status: card.querySelector(".task-status").value
             };
         }
@@ -508,6 +513,7 @@
             card.querySelector(".task-scheduled-date").value = task.scheduled_date || "";
             card.querySelector(".task-expected-finish-date").value = task.expected_finish_date || "";
             card.querySelector(".task-cost").value = task.cost || "";
+            card.querySelector(".task-report-url").value = task.report_url || "";
             card.querySelector(".task-status").value = task.status || "Pending";
 
             card.querySelector(".copy-task").addEventListener("click", () => {
