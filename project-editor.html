@@ -384,6 +384,10 @@
                     <label>Trial Type</label>
                     <input class="task-trial-type" type="text" placeholder="Bioassay trial">
                 </div>
+                <div class="field wide">
+                    <label>Trial Name</label>
+                    <input class="task-trial-name" type="text" placeholder="Specific trial name">
+                </div>
                 <div class="field">
                     <label>Scheduled Date</label>
                     <input class="task-scheduled-date" type="date">
@@ -478,6 +482,7 @@
             card.querySelector(".task-experiment-id").value = task.experiment_id || "";
             card.querySelector(".task-subject").value = task.subject || "";
             card.querySelector(".task-trial-type").value = task.trial_type || "";
+            card.querySelector(".task-trial-name").value = task.trial_name || "";
             card.querySelector(".task-scheduled-date").value = task.scheduled_date || "";
             card.querySelector(".task-expected-finish-date").value = task.expected_finish_date || "";
             card.querySelector(".task-cost").value = task.cost || "";
@@ -498,11 +503,12 @@
                 experiment_id: card.querySelector(".task-experiment-id").value.trim(),
                 subject: card.querySelector(".task-subject").value.trim(),
                 trial_type: card.querySelector(".task-trial-type").value.trim(),
+                trial_name: card.querySelector(".task-trial-name").value.trim(),
                 scheduled_date: card.querySelector(".task-scheduled-date").value,
                 expected_finish_date: card.querySelector(".task-expected-finish-date").value,
                 cost: card.querySelector(".task-cost").value.trim(),
                 status: card.querySelector(".task-status").value
-            })).filter(task => task.experiment_id || task.subject || task.trial_type);
+            })).filter(task => task.experiment_id || task.subject || task.trial_type || task.trial_name);
         }
 
         function getFormData() {

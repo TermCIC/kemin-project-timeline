@@ -493,6 +493,7 @@
                                     <th scope="col">Experiment ID</th>
                                     <th scope="col">Subject</th>
                                     <th scope="col">Trial type</th>
+                                    <th scope="col">Trial name</th>
                                     <th scope="col">Scheduled date</th>
                                     <th scope="col">Expected finish</th>
                                     <th scope="col">Cost</th>
@@ -501,7 +502,7 @@
                             </thead>
                             <tbody id="trialTableBody">
                                 <tr>
-                                    <td colspan="5" class="empty-state">Choose a project from the dropdown to view its task board.</td>
+                                    <td colspan="8" class="empty-state">Choose a project from the dropdown to view its task board.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -566,7 +567,7 @@
             progressFill.style.width = "0%";
             progressValue.textContent = "0%";
             statusStrip.innerHTML = "";
-            trialTableBody.innerHTML = '<tr><td colspan="5" class="empty-state error-text">Unable to load project data from projects/projects.json.</td></tr>';
+            trialTableBody.innerHTML = '<tr><td colspan="8" class="empty-state error-text">Unable to load project data from projects/projects.json.</td></tr>';
         }
 
         function getProjectStats(tasks) {
@@ -611,7 +612,7 @@
 
         function renderTable(tasks) {
             if (!tasks.length) {
-                trialTableBody.innerHTML = '<tr><td colspan="5" class="empty-state">No tasks available for this project.</td></tr>';
+                trialTableBody.innerHTML = '<tr><td colspan="8" class="empty-state">No tasks available for this project.</td></tr>';
                 return;
             }
 
@@ -623,6 +624,7 @@
                         <div class="task-note">Scheduled under the selected Kemin project workflow.</div>
                     </td>
                     <td>${task.trial_type}</td>
+                    <td>${task.trial_name || "-"}</td>
                     <td>${formatDate(task.scheduled_date)}</td>
                     <td>${formatDate(task.expected_finish_date)}</td>
                     <td>${task.cost || "-"}</td>
