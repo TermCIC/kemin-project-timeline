@@ -461,7 +461,7 @@
                     <div class="hero-meta">
                         <div class="hero-badge">Multi-project schedule view</div>
                         <div class="hero-badge">Progress signals by status</div>
-                        <div class="hero-badge">Updated March 24, 2026</div>
+                        <div class="hero-badge">First project loaded from signed CMU agreement</div>
                     </div>
                 </div>
             </div>
@@ -481,7 +481,7 @@
 
                     <div class="overview-grid">
                         <article class="project-card">
-                            <div class="project-name" id="projectName">Kemin Batch 1</div>
+                            <div class="project-name" id="projectName">Study 2: CMU Research Agreement</div>
                             <p class="project-summary" id="projectSummary"></p>
                             <div class="detail-list">
                                 <div class="detail-item">
@@ -580,12 +580,14 @@
 
     <script>
         const projects = {
-            "Kemin Batch 1": {
-                summary: "Batch 1 is in late-stage review with one completed delivery, one analysis stream underway, and a regulatory package still queued for submission.",
+            "Study 2: CMU Research Agreement": {
+                summary: "Research agreement with Chiang Mai University for screening chemicals against Sitophilus zeamais, Tribolium sp., and Suidasia pontifica under the October 20, 2025 agreement and Statement of Work 1 performance period.",
                 tasks: [
-                    { id: "T-101", desc: "Collect trial raw data", owner: "Team A", due: "2026-04-05", status: "Completed" },
-                    { id: "T-102", desc: "Analyze stability report", owner: "Team B", due: "2026-04-12", status: "In Progress" },
-                    { id: "T-103", desc: "Submit regulatory package", owner: "Team C", due: "2026-04-20", status: "Pending" }
+                    { id: "S2-001", desc: "Agreement execution and initial 50% payment release", owner: "Kemin / CMU", due: "2025-10-27", status: "Completed" },
+                    { id: "S2-002", desc: "Ship 8 proprietary materials to Chiang Mai University", owner: "Kemin", due: "2025-10-25", status: "Completed" },
+                    { id: "S2-003", desc: "Conduct bioassay research program at CMU facilities", owner: "CMU - Asst. Prof. Chun-I Chiu", due: "2026-03-31", status: "In Progress" },
+                    { id: "S2-004", desc: "Complete project work and trigger 25% completion payment", owner: "Kemin / CMU", due: "2026-03-31", status: "Pending" },
+                    { id: "S2-005", desc: "Submit final report with raw data, statistics, and summary tables", owner: "CMU", due: "2026-04-30", status: "Pending" }
                 ]
             },
             "Kemin Batch 2": {
