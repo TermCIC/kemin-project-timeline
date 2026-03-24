@@ -73,9 +73,6 @@
         }
 
         .hero-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.9fr);
-            gap: 24px;
             position: relative;
             z-index: 1;
         }
@@ -126,34 +123,6 @@
             background: rgba(255, 255, 255, 0.08);
             color: #f8fafc;
             backdrop-filter: blur(10px);
-        }
-
-        .hero-side {
-            display: grid;
-            gap: 14px;
-            align-content: end;
-        }
-
-        .glass-card {
-            border-radius: var(--radius-lg);
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 18px;
-            backdrop-filter: blur(14px);
-        }
-
-        .glass-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 10px;
-        }
-
-        .glass-value {
-            font-size: 1.15rem;
-            font-weight: 600;
-            line-height: 1.4;
         }
 
         .dashboard {
@@ -444,7 +413,6 @@
         }
 
         @media (max-width: 980px) {
-            .hero-grid,
             .overview-grid {
                 grid-template-columns: 1fr;
             }
@@ -494,16 +462,6 @@
                         <div class="hero-badge">Multi-project schedule view</div>
                         <div class="hero-badge">Progress signals by status</div>
                         <div class="hero-badge">Updated March 24, 2026</div>
-                    </div>
-                </div>
-                <div class="hero-side">
-                    <div class="glass-card">
-                        <div class="glass-label">Current focus</div>
-                        <div class="glass-value" id="heroFocus">Select a project to review live task progress.</div>
-                    </div>
-                    <div class="glass-card">
-                        <div class="glass-label">Portfolio snapshot</div>
-                        <div class="glass-value" id="portfolioSummary">3 projects loaded with active task tracking.</div>
                     </div>
                 </div>
             </div>
@@ -667,9 +625,6 @@
         const metricAtRisk = document.getElementById("metricAtRisk");
         const progressFill = document.getElementById("progressFill");
         const progressValue = document.getElementById("progressValue");
-        const heroFocus = document.getElementById("heroFocus");
-        const portfolioSummary = document.getElementById("portfolioSummary");
-
         function formatDate(dateValue) {
             return new Date(dateValue).toLocaleDateString("en-US", {
                 year: "numeric",
@@ -756,9 +711,6 @@
             metricAtRisk.textContent = String(stats.atRisk);
             progressFill.style.width = `${stats.completionPercent}%`;
             progressValue.textContent = `${stats.completionPercent}%`;
-            heroFocus.textContent = stats.nextTask
-                ? `${projectKey}: next priority is ${stats.nextTask.desc.toLowerCase()} by ${formatDate(stats.nextTask.due)}.`
-                : `${projectKey}: all tasks are closed.`;
 
             renderStatusStrip(stats);
             renderTable(tasks);
@@ -766,13 +718,10 @@
 
         function init() {
             const projectNames = Object.keys(projects);
-            const portfolioTaskCount = projectNames.reduce((sum, name) => sum + projects[name].tasks.length, 0);
 
             projectSelect.innerHTML = projectNames
                 .map(name => `<option value="${name}">${name}</option>`)
                 .join("");
-
-            portfolioSummary.textContent = `${projectNames.length} projects loaded with ${portfolioTaskCount} tracked tasks.`;
 
             projectSelect.addEventListener("change", event => {
                 renderProject(event.target.value);
