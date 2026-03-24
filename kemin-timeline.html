@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kemin Project Timeline</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+        :root {
+            --bg: #f4efe7;
+            --ink: #1b2230;
+            --muted: #5f6675;
+            --panel: rgba(255, 255, 255, 0.82);
+            --panel-strong: #ffffff;
+            --line: rgba(27, 34, 48, 0.1);
+            --brand: #134e4a;
+            --brand-soft: #dff3ec;
+            --accent: #c26a2d;
+            --completed: #147d64;
+            --in-progress: #b7791f;
+            --pending: #6b7280;
+            --shadow: 0 24px 70px rgba(27, 34, 48, 0.12);
+            --radius-xl: 28px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "IBM Plex Sans", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(19, 78, 74, 0.18), transparent 28%),
+                radial-gradient(circle at top right, rgba(194, 106, 45, 0.2), transparent 22%),
+                linear-gradient(180deg, #efe7da 0%, #f7f3ec 48%, #f2eee7 100%);
+            min-height: 100vh;
+            padding: 32px 18px;
+        }
+
+        .shell {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(145deg, rgba(17, 24, 39, 0.98), rgba(19, 78, 74, 0.94)),
+                #12202b;
+            color: #f9fafb;
+            border-radius: var(--radius-xl);
+            padding: 34px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto -8% -30% auto;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 62%);
+            pointer-events: none;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.9fr);
+            gap: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.76);
+            margin-bottom: 16px;
+        }
+
+        .hero h1,
+        .section-title,
+        .metric-value,
+        .project-name {
+            font-family: "Space Grotesk", sans-serif;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.3rem, 6vw, 4.6rem);
+            line-height: 0.96;
+            max-width: 10ch;
+            margin-bottom: 14px;
+        }
+
+        .hero p {
+            max-width: 60ch;
+            color: rgba(249, 250, 251, 0.82);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .hero-badge {
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #f8fafc;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-side {
+            display: grid;
+            gap: 14px;
+            align-content: end;
+        }
+
+        .glass-card {
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 18px;
+            backdrop-filter: blur(14px);
+        }
+
+        .glass-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .glass-value {
+            font-size: 1.15rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .dashboard {
+            display: grid;
+            gap: 24px;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+        }
+
+        .panel-inner {
+            padding: 28px;
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: end;
+            margin-bottom: 22px;
+        }
+
+        .section-title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 8px;
+        }
+
+        .section-copy {
+            color: var(--muted);
+            max-width: 58ch;
+            line-height: 1.6;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+            gap: 20px;
+        }
+
+        .project-card {
+            background: var(--panel-strong);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+        }
+
+        .project-name {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .project-summary {
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+
+        .detail-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .detail-item {
+            padding: 14px;
+            border-radius: var(--radius-md);
+            background: #f7f4ed;
+            border: 1px solid rgba(19, 78, 74, 0.08);
+        }
+
+        .detail-label {
+            color: var(--muted);
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+        }
+
+        .metrics-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .metric-card {
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            background: linear-gradient(180deg, #fffaf3, #fff);
+            border: 1px solid rgba(27, 34, 48, 0.08);
+        }
+
+        .metric-label {
+            color: var(--muted);
+            font-size: 0.84rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .metric-subtext {
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .field {
+            min-width: min(100%, 340px);
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        select {
+            width: 100%;
+            appearance: none;
+            border: 1px solid rgba(27, 34, 48, 0.14);
+            border-radius: 14px;
+            padding: 14px 16px;
+            font: inherit;
+            color: var(--ink);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 244, 237, 0.98));
+        }
+
+        .status-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .strip-pill {
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            background: #f5f5f4;
+            color: var(--ink);
+        }
+
+        .strip-pill strong {
+            font-family: "Space Grotesk", sans-serif;
+            margin-left: 6px;
+        }
+
+        .table-shell {
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--line);
+            background: var(--panel-strong);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            text-align: left;
+            font-size: 0.82rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            padding: 16px 18px;
+            background: #f7f4ed;
+            border-bottom: 1px solid var(--line);
+        }
+
+        tbody td {
+            padding: 18px;
+            border-bottom: 1px solid rgba(27, 34, 48, 0.08);
+            vertical-align: top;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: rgba(19, 78, 74, 0.03);
+        }
+
+        .task-code {
+            font-family: "Space Grotesk", sans-serif;
+            font-weight: 700;
+        }
+
+        .task-desc {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .task-note {
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .status-completed {
+            background: rgba(20, 125, 100, 0.12);
+            color: var(--completed);
+        }
+
+        .status-in-progress {
+            background: rgba(183, 121, 31, 0.14);
+            color: var(--in-progress);
+        }
+
+        .status-pending {
+            background: rgba(107, 114, 128, 0.14);
+            color: var(--pending);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 12px;
+            border-radius: 999px;
+            background: #e5e7eb;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--brand), var(--accent));
+            transition: width 0.35s ease;
+        }
+
+        .progress-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .empty-state {
+            padding: 26px 18px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        footer {
+            padding: 18px 4px 0;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 980px) {
+            .hero-grid,
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 18px 12px 28px;
+            }
+
+            .hero,
+            .panel-inner {
+                padding: 22px;
+            }
+
+            .detail-list {
+                grid-template-columns: 1fr;
+            }
+
+            .table-shell {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 760px;
+            }
+
+            .section-head,
+            .progress-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="shell">
+        <header class="hero">
+            <div class="hero-grid">
+                <div>
+                    <div class="eyebrow">Kemin project control hub</div>
+                    <h1>Timeline built for active project tracking.</h1>
+                    <p>
+                        Monitor trial work, spot what is overdue or stalled, and keep the next contract milestone visible without digging through spreadsheets.
+                    </p>
+                    <div class="hero-meta">
+                        <div class="hero-badge">Multi-project schedule view</div>
+                        <div class="hero-badge">Progress signals by status</div>
+                        <div class="hero-badge">Updated March 24, 2026</div>
+                    </div>
+                </div>
+                <div class="hero-side">
+                    <div class="glass-card">
+                        <div class="glass-label">Current focus</div>
+                        <div class="glass-value" id="heroFocus">Select a project to review live task progress.</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-label">Portfolio snapshot</div>
+                        <div class="glass-value" id="portfolioSummary">3 projects loaded with active task tracking.</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard">
+            <section class="panel">
+                <div class="panel-inner">
+                    <div class="section-head">
+                        <div>
+                            <h2 class="section-title">Project overview</h2>
+                            <p class="section-copy">
+                                Each project view combines summary metrics, ownership details, and the current task list so the site reads like an operating dashboard instead of a static table.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="overview-grid">
+                        <article class="project-card">
+                            <div class="project-name" id="projectName">Kemin Batch 1</div>
+                            <p class="project-summary" id="projectSummary"></p>
+                            <div class="detail-list">
+                                <div class="detail-item">
+                                    <div class="detail-label">Primary owner</div>
+                                    <div class="detail-value" id="primaryOwner"></div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Next due date</div>
+                                    <div class="detail-value" id="nextDueDate"></div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Completion pace</div>
+                                    <div class="detail-value" id="completionPace"></div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Open actions</div>
+                                    <div class="detail-value" id="openActions"></div>
+                                </div>
+                            </div>
+
+                            <div class="progress-track" aria-hidden="true">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <div class="progress-meta">
+                                <span id="progressLabel">Overall completion</span>
+                                <span id="progressValue">0%</span>
+                            </div>
+                        </article>
+
+                        <aside class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-label">Total tasks</div>
+                                <div class="metric-value" id="metricTotal">0</div>
+                                <div class="metric-subtext">All tasks currently listed for the selected project.</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Completed</div>
+                                <div class="metric-value" id="metricCompleted">0</div>
+                                <div class="metric-subtext">Closed work items ready for reporting or handoff.</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">At risk</div>
+                                <div class="metric-value" id="metricAtRisk">0</div>
+                                <div class="metric-subtext">In progress or pending tasks that still need attention.</div>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-inner">
+                    <div class="section-head">
+                        <div>
+                            <h2 class="section-title">Trial task board</h2>
+                            <p class="section-copy">
+                                Switch projects to update the table, summary strip, and progress state. The layout is optimized for both quick scanning and detail review.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="toolbar">
+                        <div class="field">
+                            <label for="projectSelect">Choose project</label>
+                            <select id="projectSelect" aria-label="Choose a project"></select>
+                        </div>
+                        <div class="status-strip" id="statusStrip" aria-label="Project status summary"></div>
+                    </div>
+
+                    <div class="table-shell">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Task ID</th>
+                                    <th scope="col">Task description</th>
+                                    <th scope="col">Assigned to</th>
+                                    <th scope="col">Due date</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="trialTableBody">
+                                <tr>
+                                    <td colspan="5" class="empty-state">Choose a project from the dropdown to view its task board.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Kemin Project Timeline. Built for clearer contract and trial follow-up.</p>
+        </footer>
+    </div>
+
+    <script>
+        const projects = {
+            "Kemin Batch 1": {
+                summary: "Batch 1 is in late-stage review with one completed delivery, one analysis stream underway, and a regulatory package still queued for submission.",
+                tasks: [
+                    { id: "T-101", desc: "Collect trial raw data", owner: "Team A", due: "2026-04-05", status: "Completed" },
+                    { id: "T-102", desc: "Analyze stability report", owner: "Team B", due: "2026-04-12", status: "In Progress" },
+                    { id: "T-103", desc: "Submit regulatory package", owner: "Team C", due: "2026-04-20", status: "Pending" }
+                ]
+            },
+            "Kemin Batch 2": {
+                summary: "Batch 2 is still in delivery buildout, with field preparation active and downstream quality work scheduled across May.",
+                tasks: [
+                    { id: "T-201", desc: "Prepare field setup", owner: "Team A", due: "2026-05-02", status: "In Progress" },
+                    { id: "T-202", desc: "Perform QC checks", owner: "Team B", due: "2026-05-15", status: "Pending" },
+                    { id: "T-203", desc: "Review trial summary", owner: "Team C", due: "2026-05-30", status: "Pending" }
+                ]
+            },
+            "Kemin Special Project": {
+                summary: "The special project is focused on contract validation and final reporting, with a smaller task set but tighter executive visibility.",
+                tasks: [
+                    { id: "T-301", desc: "Verify contract items", owner: "Team D", due: "2026-06-10", status: "In Progress" },
+                    { id: "T-302", desc: "Submit final report", owner: "Team E", due: "2026-06-25", status: "Pending" }
+                ]
+            }
+        };
+
+        const statusClassMap = {
+            "Completed": "status-completed",
+            "In Progress": "status-in-progress",
+            "Pending": "status-pending"
+        };
+
+        const projectSelect = document.getElementById("projectSelect");
+        const trialTableBody = document.getElementById("trialTableBody");
+        const statusStrip = document.getElementById("statusStrip");
+        const projectName = document.getElementById("projectName");
+        const projectSummary = document.getElementById("projectSummary");
+        const primaryOwner = document.getElementById("primaryOwner");
+        const nextDueDate = document.getElementById("nextDueDate");
+        const completionPace = document.getElementById("completionPace");
+        const openActions = document.getElementById("openActions");
+        const metricTotal = document.getElementById("metricTotal");
+        const metricCompleted = document.getElementById("metricCompleted");
+        const metricAtRisk = document.getElementById("metricAtRisk");
+        const progressFill = document.getElementById("progressFill");
+        const progressValue = document.getElementById("progressValue");
+        const heroFocus = document.getElementById("heroFocus");
+        const portfolioSummary = document.getElementById("portfolioSummary");
+
+        function formatDate(dateValue) {
+            return new Date(dateValue).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
+        }
+
+        function getProjectStats(tasks) {
+            const counts = tasks.reduce((accumulator, task) => {
+                accumulator.total += 1;
+                if (task.status === "Completed") {
+                    accumulator.completed += 1;
+                } else if (task.status === "In Progress") {
+                    accumulator.inProgress += 1;
+                } else {
+                    accumulator.pending += 1;
+                }
+                return accumulator;
+            }, { total: 0, completed: 0, inProgress: 0, pending: 0 });
+
+            const nextTask = [...tasks]
+                .filter(task => task.status !== "Completed")
+                .sort((a, b) => new Date(a.due) - new Date(b.due))[0];
+
+            const ownerCount = tasks.reduce((owners, task) => {
+                owners[task.owner] = (owners[task.owner] || 0) + 1;
+                return owners;
+            }, {});
+
+            const primaryOwnerEntry = Object.entries(ownerCount).sort((a, b) => b[1] - a[1])[0];
+            const completionPercent = counts.total ? Math.round((counts.completed / counts.total) * 100) : 0;
+
+            return {
+                ...counts,
+                nextTask,
+                primaryOwner: primaryOwnerEntry ? primaryOwnerEntry[0] : "Unassigned",
+                completionPercent,
+                atRisk: counts.inProgress + counts.pending
+            };
+        }
+
+        function renderStatusStrip(stats) {
+            statusStrip.innerHTML = `
+                <div class="strip-pill">Completed <strong>${stats.completed}</strong></div>
+                <div class="strip-pill">In Progress <strong>${stats.inProgress}</strong></div>
+                <div class="strip-pill">Pending <strong>${stats.pending}</strong></div>
+            `;
+        }
+
+        function renderTable(tasks) {
+            if (!tasks.length) {
+                trialTableBody.innerHTML = '<tr><td colspan="5" class="empty-state">No tasks available for this project.</td></tr>';
+                return;
+            }
+
+            trialTableBody.innerHTML = tasks.map(task => `
+                <tr>
+                    <td><span class="task-code">${task.id}</span></td>
+                    <td>
+                        <div class="task-desc">${task.desc}</div>
+                        <div class="task-note">Scheduled under the selected Kemin project workflow.</div>
+                    </td>
+                    <td>${task.owner}</td>
+                    <td>${formatDate(task.due)}</td>
+                    <td><span class="status-badge ${statusClassMap[task.status]}">${task.status}</span></td>
+                </tr>
+            `).join("");
+        }
+
+        function renderProject(projectKey) {
+            const project = projects[projectKey];
+            const tasks = project ? project.tasks : [];
+            const stats = getProjectStats(tasks);
+
+            projectName.textContent = projectKey;
+            projectSummary.textContent = project.summary || "No project summary available.";
+            primaryOwner.textContent = stats.primaryOwner;
+            nextDueDate.textContent = stats.nextTask ? formatDate(stats.nextTask.due) : "No upcoming due date";
+            completionPace.textContent = `${stats.completionPercent}% complete`;
+            openActions.textContent = `${stats.atRisk} active follow-ups`;
+            metricTotal.textContent = String(stats.total);
+            metricCompleted.textContent = String(stats.completed);
+            metricAtRisk.textContent = String(stats.atRisk);
+            progressFill.style.width = `${stats.completionPercent}%`;
+            progressValue.textContent = `${stats.completionPercent}%`;
+            heroFocus.textContent = stats.nextTask
+                ? `${projectKey}: next priority is ${stats.nextTask.desc.toLowerCase()} by ${formatDate(stats.nextTask.due)}.`
+                : `${projectKey}: all tasks are closed.`;
+
+            renderStatusStrip(stats);
+            renderTable(tasks);
+        }
+
+        function init() {
+            const projectNames = Object.keys(projects);
+            const portfolioTaskCount = projectNames.reduce((sum, name) => sum + projects[name].tasks.length, 0);
+
+            projectSelect.innerHTML = projectNames
+                .map(name => `<option value="${name}">${name}</option>`)
+                .join("");
+
+            portfolioSummary.textContent = `${projectNames.length} projects loaded with ${portfolioTaskCount} tracked tasks.`;
+
+            projectSelect.addEventListener("change", event => {
+                renderProject(event.target.value);
+            });
+
+            renderProject(projectSelect.value);
+        }
+
+        init();
+    </script>
+</body>
+</html>
