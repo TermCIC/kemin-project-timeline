@@ -64,7 +64,7 @@
       "status": "Completed"
     },
     {
-      "experiment_id": "SP1-001",
+      "experiment_id": "SP1-002",
       "subject": "Suidasia pontifica",
       "trial_type": "Contact toxicity",
       "trial_name": "Contact toxicity assay 48h",
@@ -74,13 +74,33 @@
       "status": "Completed"
     },
     {
-      "experiment_id": "SP1-001",
+      "experiment_id": "SP1-003",
       "subject": "Suidasia pontifica",
       "trial_type": "Contact toxicity",
       "trial_name": "Contact toxicity assay 72h",
       "scheduled_date": "2025-11-20",
       "expected_finish_date": "2025-11-20",
       "cost": "THB 10,720.00",
+      "status": "Completed"
+    },
+    {
+      "experiment_id": "SP3-001",
+      "subject": "Suidasia pontifica",
+      "trial_type": "Population suppression",
+      "trial_name": "Population suppression 30days",
+      "scheduled_date": "2025-12-25",
+      "expected_finish_date": "2025-12-29",
+      "cost": "THB 18,000",
+      "status": "Completed"
+    },
+    {
+      "experiment_id": "SP3-002",
+      "subject": "Suidasia pontifica",
+      "trial_type": "Population suppression",
+      "trial_name": "Population suppression 60days",
+      "scheduled_date": "2026-01-25",
+      "expected_finish_date": "2026-01-29",
+      "cost": "THB 18,000",
       "status": "Completed"
     }
   ]
