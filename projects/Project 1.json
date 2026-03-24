@@ -19,8 +19,8 @@
       "trial_type": "Contact toxicity",
       "trial_name": "Contact toxicity assay 24h",
       "scheduled_date": "2025-11-20",
-      "expected_finish_date": "2025-11-20",
-      "cost": "THB 34,720.00",
+      "expected_finish_date": "2025-11-18",
+      "cost": "THB 10,720.00",
       "status": "Completed"
     },
     {
@@ -61,6 +61,26 @@
       "scheduled_date": "2025-12-07",
       "expected_finish_date": "2025-12-13",
       "cost": "THB 11,320.00",
+      "status": "Completed"
+    },
+    {
+      "experiment_id": "SP1-001",
+      "subject": "Suidasia pontifica",
+      "trial_type": "Contact toxicity",
+      "trial_name": "Contact toxicity assay 48h",
+      "scheduled_date": "2025-11-20",
+      "expected_finish_date": "2025-11-19",
+      "cost": "THB 10,720.00",
+      "status": "Completed"
+    },
+    {
+      "experiment_id": "SP1-001",
+      "subject": "Suidasia pontifica",
+      "trial_type": "Contact toxicity",
+      "trial_name": "Contact toxicity assay 72h",
+      "scheduled_date": "2025-11-20",
+      "expected_finish_date": "2025-11-20",
+      "cost": "THB 10,720.00",
       "status": "Completed"
     }
   ]

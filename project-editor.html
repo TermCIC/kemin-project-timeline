@@ -244,6 +244,12 @@
             margin-bottom: 12px;
         }
 
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
         .mono {
             font-family: Consolas, "Courier New", monospace;
         }
@@ -369,7 +375,10 @@
         <article class="task-card">
             <div class="task-tools">
                 <strong class="task-title">Task</strong>
-                <button type="button" class="danger remove-task">Remove Task</button>
+                <div class="task-actions">
+                    <button type="button" class="secondary copy-task">Copy Task</button>
+                    <button type="button" class="danger remove-task">Remove Task</button>
+                </div>
             </div>
             <div class="task-grid">
                 <div class="field">
@@ -474,6 +483,19 @@
             }
         }
 
+        function getTaskDataFromCard(card) {
+            return {
+                experiment_id: card.querySelector(".task-experiment-id").value.trim(),
+                subject: card.querySelector(".task-subject").value.trim(),
+                trial_type: card.querySelector(".task-trial-type").value.trim(),
+                trial_name: card.querySelector(".task-trial-name").value.trim(),
+                scheduled_date: card.querySelector(".task-scheduled-date").value,
+                expected_finish_date: card.querySelector(".task-expected-finish-date").value,
+                cost: card.querySelector(".task-cost").value.trim(),
+                status: card.querySelector(".task-status").value
+            };
+        }
+
         function addTaskCard(task = {}) {
             ensureTaskContainer();
             const fragment = taskTemplate.content.cloneNode(true);
@@ -488,6 +510,10 @@
             card.querySelector(".task-cost").value = task.cost || "";
             card.querySelector(".task-status").value = task.status || "Pending";
 
+            card.querySelector(".copy-task").addEventListener("click", () => {
+                addTaskCard(getTaskDataFromCard(card));
+            });
+
             card.querySelector(".remove-task").addEventListener("click", () => {
                 card.remove();
                 if (!taskList.children.length) {
@@ -499,16 +525,9 @@
         }
 
         function readTaskCards() {
-            return Array.from(taskList.querySelectorAll(".task-card")).map(card => ({
-                experiment_id: card.querySelector(".task-experiment-id").value.trim(),
-                subject: card.querySelector(".task-subject").value.trim(),
-                trial_type: card.querySelector(".task-trial-type").value.trim(),
-                trial_name: card.querySelector(".task-trial-name").value.trim(),
-                scheduled_date: card.querySelector(".task-scheduled-date").value,
-                expected_finish_date: card.querySelector(".task-expected-finish-date").value,
-                cost: card.querySelector(".task-cost").value.trim(),
-                status: card.querySelector(".task-status").value
-            })).filter(task => task.experiment_id || task.subject || task.trial_type || task.trial_name);
+            return Array.from(taskList.querySelectorAll(".task-card"))
+                .map(getTaskDataFromCard)
+                .filter(task => task.experiment_id || task.subject || task.trial_type || task.trial_name);
         }
 
         function getFormData() {
