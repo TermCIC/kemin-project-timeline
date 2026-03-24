@@ -1,0 +1,85 @@
+{
+  "project_name": "Prototypes H, I, J, K, L, M",
+  "summary": "Kemin wants to test more prototypes",
+  "budget": "THB 67,280",
+  "subjects": [
+    "Suidasia pontifica"
+  ],
+  "trials": [
+    "Population suppression",
+    "Contact toxicity",
+    "Repellency"
+  ],
+  "tasks": [
+    {
+      "experiment_id": "SP1-001",
+      "subject": "Suidasia pontifica",
+      "trial_type": "Contact toxicity",
+      "trial_name": "Contact toxicity assay 24h",
+      "scheduled_date": "2025-12-15",
+      "expected_finish_date": "2026-03-04",
+      "cost": "THB 10,720.00",
+      "status": "Completed"
+    },
+    {
+      "experiment_id": "SP2-003",
+      "subject": "Suidasia pontifica",
+      "trial_type": "Repellency",
+      "trial_name": "Migration Choice Test II",
+      "scheduled_date": "2025-12-07",
+      "expected_finish_date": "2025-12-13",
+      "cost": "THB 11,320.00",
+      "status": "Completed"
+    },
+    {
+      "experiment_id": "SP2-004",
+      "subject": "Suidasia pontifica",
+      "trial_type": "Repellency",
+      "trial_name": "Migration Stimulation Test",
+      "scheduled_date": "2025-12-07",
+      "expected_finish_date": "2025-12-13",
+      "cost": "THB 11,320.00",
+      "status": "Completed"
+    },
+    {
+      "experiment_id": "SP1-002",
+      "subject": "Suidasia pontifica",
+      "trial_type": "Contact toxicity",
+      "trial_name": "Contact toxicity assay 48h",
+      "scheduled_date": "2025-12-15",
+      "expected_finish_date": "2026-03-04",
+      "cost": "THB 10,720.00",
+      "status": "Completed"
+    },
+    {
+      "experiment_id": "SP1-003",
+      "subject": "Suidasia pontifica",
+      "trial_type": "Contact toxicity",
+      "trial_name": "Contact toxicity assay 72h",
+      "scheduled_date": "2025-12-15",
+      "expected_finish_date": "2026-03-04",
+      "cost": "THB 10,720.00",
+      "status": "Completed"
+    },
+    {
+      "experiment_id": "SP3-001",
+      "subject": "Suidasia pontifica",
+      "trial_type": "Population suppression",
+      "trial_name": "Population suppression 30days",
+      "scheduled_date": "2025-03-25",
+      "expected_finish_date": "2025-04-25",
+      "cost": "THB 18,000",
+      "status": "Pending"
+    },
+    {
+      "experiment_id": "SP3-002",
+      "subject": "Suidasia pontifica",
+      "trial_type": "Population suppression",
+      "trial_name": "Population suppression 60days",
+      "scheduled_date": "2026-04-25",
+      "expected_finish_date": "2026-05-25",
+      "cost": "THB 18,000",
+      "status": "Pending"
+    }
+  ]
+}
