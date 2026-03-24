@@ -17,7 +17,7 @@
         "experiment_id": "SP1-001",
         "subject": "Suidasia pontifica",
         "trial_type": "Contact toxicity",
-        "trial_name": "Mite contact toxicity assay",
+        "trial_name": "Contact toxicity assay 24h",
         "scheduled_date": "2025-11-20",
         "expected_finish_date": "2025-11-20",
         "cost": "THB 34,720.00",
@@ -27,10 +27,40 @@
         "experiment_id": "SP2-001",
         "subject": "Suidasia pontifica",
         "trial_type": "Repellency",
-        "trial_name": "Mite repellency assay",
+        "trial_name": "Single-individual repellency assay",
         "scheduled_date": "2025-12-07",
         "expected_finish_date": "2025-12-13",
-        "cost": "THB 51,720.00",
+        "cost": "THB 11,320.00",
+        "status": "Completed"
+      },
+      {
+        "experiment_id": "SP2-002",
+        "subject": "Suidasia pontifica",
+        "trial_type": "Repellency",
+        "trial_name": "Migration Choice Test I",
+        "scheduled_date": "2025-12-07",
+        "expected_finish_date": "2025-12-13",
+        "cost": "THB 11,320.00",
+        "status": "Completed"
+      },
+      {
+        "experiment_id": "SP2-003",
+        "subject": "Suidasia pontifica",
+        "trial_type": "Repellency",
+        "trial_name": "Migration Choice Test II",
+        "scheduled_date": "2025-12-07",
+        "expected_finish_date": "2025-12-13",
+        "cost": "THB 11,320.00",
+        "status": "Completed"
+      },
+      {
+        "experiment_id": "SP2-004",
+        "subject": "Suidasia pontifica",
+        "trial_type": "Repellency",
+        "trial_name": "Migration Stimulation Test",
+        "scheduled_date": "2025-12-07",
+        "expected_finish_date": "2025-12-13",
+        "cost": "THB 11,320.00",
         "status": "Completed"
       }
     ]
