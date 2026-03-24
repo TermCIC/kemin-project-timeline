@@ -259,6 +259,126 @@
             background: var(--panel-strong);
         }
 
+        .timeline-figure {
+            margin-bottom: 22px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: var(--panel-strong);
+            overflow: hidden;
+        }
+
+        .timeline-figure-head {
+            padding: 18px;
+            border-bottom: 1px solid var(--line);
+            background: #f7f4ed;
+        }
+
+        .timeline-figure-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .timeline-figure-copy {
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .timeline-scale {
+            position: relative;
+            height: 34px;
+            margin-top: 14px;
+            border-top: 1px solid rgba(27, 34, 48, 0.08);
+        }
+
+        .timeline-tick {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            border-left: 1px dashed rgba(27, 34, 48, 0.12);
+        }
+
+        .timeline-tick-label {
+            position: absolute;
+            top: 8px;
+            transform: translateX(-50%);
+            font-size: 0.78rem;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .timeline-rows {
+            display: grid;
+        }
+
+        .timeline-row {
+            display: grid;
+            grid-template-columns: 260px minmax(0, 1fr);
+            gap: 14px;
+            padding: 14px 18px;
+            border-bottom: 1px solid rgba(27, 34, 48, 0.06);
+            align-items: center;
+        }
+
+        .timeline-row:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-label {
+            min-width: 0;
+        }
+
+        .timeline-label strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .timeline-label span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .timeline-track {
+            position: relative;
+            min-height: 34px;
+            border-radius: 999px;
+            background:
+                linear-gradient(180deg, rgba(19, 78, 74, 0.04), rgba(19, 78, 74, 0.04)),
+                #f7f4ed;
+        }
+
+        .timeline-bar {
+            position: absolute;
+            top: 7px;
+            height: 20px;
+            min-width: 10px;
+            border-radius: 999px;
+            padding: 0 10px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .timeline-bar.status-completed {
+            background: rgba(20, 125, 100, 0.18);
+            color: var(--completed);
+        }
+
+        .timeline-bar.status-in-progress {
+            background: rgba(183, 121, 31, 0.2);
+            color: var(--in-progress);
+        }
+
+        .timeline-bar.status-pending {
+            background: rgba(107, 114, 128, 0.18);
+            color: var(--pending);
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -482,6 +602,14 @@
 
                     <div class="status-strip" id="statusStrip" aria-label="Project status summary"></div>
 
+                    <div class="timeline-figure" id="timelineFigure">
+                        <div class="timeline-figure-head">
+                            <div class="timeline-figure-title">Task timeline</div>
+                            <div class="timeline-figure-copy">Visual schedule for task start and expected finish dates.</div>
+                        </div>
+                        <div class="empty-state">Select a project to view its task timeline.</div>
+                    </div>
+
                     <div class="table-shell">
                         <table>
                             <thead>
@@ -523,6 +651,7 @@
         const projectSelect = document.getElementById("projectSelect");
         const trialTableBody = document.getElementById("trialTableBody");
         const statusStrip = document.getElementById("statusStrip");
+        const timelineFigure = document.getElementById("timelineFigure");
         const projectName = document.getElementById("projectName");
         const projectSummary = document.getElementById("projectSummary");
         const scheduledStart = document.getElementById("scheduledStart");
@@ -561,6 +690,13 @@
             progressFill.style.width = "0%";
             progressValue.textContent = "0%";
             statusStrip.innerHTML = "";
+            timelineFigure.innerHTML = `
+                <div class="timeline-figure-head">
+                    <div class="timeline-figure-title">Task timeline</div>
+                    <div class="timeline-figure-copy">${message}</div>
+                </div>
+                <div class="empty-state error-text">Unable to render the task timeline.</div>
+            `;
             trialTableBody.innerHTML = '<tr><td colspan="8" class="empty-state error-text">Unable to load project data from projects/projects.json.</td></tr>';
         }
 
@@ -601,6 +737,85 @@
                 <div class="strip-pill">Completed <strong>${stats.completed}</strong></div>
                 <div class="strip-pill">In Progress <strong>${stats.inProgress}</strong></div>
                 <div class="strip-pill">Pending <strong>${stats.pending}</strong></div>
+            `;
+        }
+
+        function getStatusClass(status) {
+            return status === "Completed"
+                ? "status-completed"
+                : status === "In Progress"
+                    ? "status-in-progress"
+                    : "status-pending";
+        }
+
+        function renderTimelineFigure(tasks) {
+            const datedTasks = tasks.filter(task => task.scheduled_date && task.expected_finish_date);
+            if (!datedTasks.length) {
+                timelineFigure.innerHTML = `
+                    <div class="timeline-figure-head">
+                        <div class="timeline-figure-title">Task timeline</div>
+                        <div class="timeline-figure-copy">Visual schedule for task start and expected finish dates.</div>
+                    </div>
+                    <div class="empty-state">No dated tasks available for the timeline figure.</div>
+                `;
+                return;
+            }
+
+            const normalizedTasks = datedTasks.map(task => {
+                const startDate = new Date(task.scheduled_date);
+                const endDate = new Date(task.expected_finish_date);
+                const safeStart = startDate <= endDate ? startDate : endDate;
+                const safeEnd = endDate >= startDate ? endDate : startDate;
+                return { ...task, safeStart, safeEnd };
+            });
+
+            const minTime = Math.min(...normalizedTasks.map(task => task.safeStart.getTime()));
+            const maxTime = Math.max(...normalizedTasks.map(task => task.safeEnd.getTime()));
+            const totalSpan = Math.max(maxTime - minTime, 24 * 60 * 60 * 1000);
+            const tickCount = 5;
+
+            const ticks = Array.from({ length: tickCount }, (_, index) => {
+                const ratio = tickCount === 1 ? 0 : index / (tickCount - 1);
+                const tickTime = new Date(minTime + totalSpan * ratio);
+                return {
+                    left: ratio * 100,
+                    label: tickTime.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+                };
+            });
+
+            const rows = normalizedTasks
+                .sort((a, b) => a.safeStart - b.safeStart)
+                .map(task => {
+                    const left = ((task.safeStart.getTime() - minTime) / totalSpan) * 100;
+                    const width = Math.max(((task.safeEnd.getTime() - task.safeStart.getTime()) / totalSpan) * 100, 2.5);
+                    return `
+                        <div class="timeline-row">
+                            <div class="timeline-label">
+                                <strong>${task.experiment_id}</strong>
+                                <span>${task.trial_name || task.subject}</span>
+                            </div>
+                            <div class="timeline-track">
+                                <div class="timeline-bar ${getStatusClass(task.status)}" style="left:${left}%; width:${width}%;">
+                                    ${task.trial_type}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+
+            timelineFigure.innerHTML = `
+                <div class="timeline-figure-head">
+                    <div class="timeline-figure-title">Task timeline</div>
+                    <div class="timeline-figure-copy">Visual schedule for task start and expected finish dates.</div>
+                    <div class="timeline-scale">
+                        ${ticks.map(tick => `
+                            <div class="timeline-tick" style="left:${tick.left}%;">
+                                <span class="timeline-tick-label">${tick.label}</span>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+                <div class="timeline-rows">${rows}</div>
             `;
         }
 
@@ -651,6 +866,7 @@
             progressValue.textContent = `${stats.completionPercent}%`;
 
             renderStatusStrip(stats);
+            renderTimelineFigure(tasks);
             renderTable(tasks);
         }
 
