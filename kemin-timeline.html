@@ -397,34 +397,31 @@
             <!-- Project Trial List Section -->
             <div class="project-trial-list" style="margin-top: 40px;">
                 <h2 style="color: #2c3e50; margin-bottom: 20px; font-size: 1.5em;">🧪 Project Trial List</h2>
-                <p style="color: #555; margin-bottom: 15px;">Refer to the Kemin project trial list below. Update with actual trial entries from the contract document as needed.</p>
-                <table style="width:100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background:#667eea; color:white;">
-                            <th style="padding:10px; text-align:left;">Trial ID</th>
-                            <th style="padding:10px; text-align:left;">Description</th>
-                            <th style="padding:10px; text-align:left;">Start Date</th>
-                            <th style="padding:10px; text-align:left;">End Date</th>
-                            <th style="padding:10px; text-align:left;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding:10px; border-bottom:1px solid #e0e0e0;">#1</td>
-                            <td style="padding:10px; border-bottom:1px solid #e0e0e0;">Example trial entry, update with actual content.</td>
-                            <td style="padding:10px; border-bottom:1px solid #e0e0e0;">2026-01-10</td>
-                            <td style="padding:10px; border-bottom:1px solid #e0e0e0;">2026-01-25</td>
-                            <td style="padding:10px; border-bottom:1px solid #e0e0e0;">Completed</td>
-                        </tr>
-                        <tr>
-                            <td style="padding:10px; border-bottom:1px solid #e0e0e0;">#2</td>
-                            <td style="padding:10px; border-bottom:1px solid #e0e0e0;">Example trial entry, update with actual content.</td>
-                            <td style="padding:10px; border-bottom:1px solid #e0e0e0;">2026-04-01</td>
-                            <td style="padding:10px; border-bottom:1px solid #e0e0e0;">2026-05-10</td>
-                            <td style="padding:10px; border-bottom:1px solid #e0e0e0;">In Progress</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <p style="color: #555; margin-bottom: 15px;">Select a project to view its active trial tasks and status.</p>
+
+                <div style="margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                    <label style="font-weight: bold; color: #2c3e50;">Project:</label>
+                    <select id="projectSelect" style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; min-width: 220px;"></select>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table id="trialTable" style="width:100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background:#667eea; color:white;">
+                                <th style="padding:10px; text-align:left;">Task ID</th>
+                                <th style="padding:10px; text-align:left;">Task Description</th>
+                                <th style="padding:10px; text-align:left;">Assigned To</th>
+                                <th style="padding:10px; text-align:left;">Due Date</th>
+                                <th style="padding:10px; text-align:left;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trialTableBody">
+                            <tr>
+                                <td colspan="5" style="padding: 15px; text-align:center; color:#555;">Choose a project from dropdown to view tasks.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -432,5 +429,55 @@
             <p>&copy; 2026 Kemin Project Timeline | Last Updated: March 24, 2026</p>
         </footer>
     </div>
+
+    <script>
+        const projects = {
+            "Kemin Batch 1": [
+                { id: "T-101", desc: "Collect trial raw data", owner: "Team A", due: "2026-04-05", status: "Completed" },
+                { id: "T-102", desc: "Analyze stability report", owner: "Team B", due: "2026-04-12", status: "In Progress" },
+                { id: "T-103", desc: "Submit regulatory package", owner: "Team C", due: "2026-04-20", status: "Pending" }
+            ],
+            "Kemin Batch 2": [
+                { id: "T-201", desc: "Prepare field setup", owner: "Team A", due: "2026-05-02", status: "In Progress" },
+                { id: "T-202", desc: "Perform QC checks", owner: "Team B", due: "2026-05-15", status: "Pending" },
+                { id: "T-203", desc: "Review trial summary", owner: "Team C", due: "2026-05-30", status: "Pending" }
+            ],
+            "Kemin Special Project": [
+                { id: "T-301", desc: "Verify contract items", owner: "Team D", due: "2026-06-10", status: "In Progress" },
+                { id: "T-302", desc: "Submit final report", owner: "Team E", due: "2026-06-25", status: "Pending" }
+            ]
+        };
+
+        const projectSelect = document.getElementById('projectSelect');
+        const trialTableBody = document.getElementById('trialTableBody');
+
+        function renderTable(projectName) {
+            const rows = projects[projectName] || [];
+            if (!rows.length) {
+                trialTableBody.innerHTML = '<tr><td colspan="5" style="padding: 15px; text-align:center; color:#555;">No tasks available for this project.</td></tr>';
+                return;
+            }
+
+            trialTableBody.innerHTML = rows.map(row => {
+                const statusClass = row.status === 'Completed' ? 'status-completed' : row.status === 'In Progress' ? 'status-in-progress' : 'status-pending';
+                return `
+                    <tr>
+                        <td style="padding:10px; border-bottom:1px solid #e0e0e0;">${row.id}</td>
+                        <td style="padding:10px; border-bottom:1px solid #e0e0e0;">${row.desc}</td>
+                        <td style="padding:10px; border-bottom:1px solid #e0e0e0;">${row.owner}</td>
+                        <td style="padding:10px; border-bottom:1px solid #e0e0e0;">${row.due}</td>
+                        <td style="padding:10px; border-bottom:1px solid #e0e0e0;"><span class="timeline-status ${statusClass}">${row.status}</span></td>
+                    </tr>`;
+            }).join('');
+        }
+
+        function init() {
+            projectSelect.innerHTML = Object.keys(projects).map(name => `<option value="${name}">${name}</option>`).join('');
+            projectSelect.addEventListener('change', e => renderTable(e.target.value));
+            renderTable(projectSelect.value);
+        }
+
+        init();
+    </script>
 </body>
 </html>
