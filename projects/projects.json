@@ -2,6 +2,11 @@
   "Study 2: CMU Research Agreement": {
     "summary": "Research agreement with Chiang Mai University for screening chemicals against Sitophilus zeamais, Tribolium sp., and Suidasia pontifica under the October 20, 2025 agreement and Statement of Work 1 performance period.",
     "budget": "THB 334,488.00",
+    "subjects": [
+      "Sitophilus zeamais",
+      "Tribolium sp.",
+      "Suidasia pontifica"
+    ],
     "trials": [
       "Population suppression",
       "Contact toxicity",
@@ -58,6 +63,9 @@
   "Kemin Batch 2": {
     "summary": "Batch 2 is still in delivery buildout, with field preparation active and downstream quality work scheduled across May.",
     "budget": "TBD",
+    "subjects": [
+      "TBD"
+    ],
     "trials": [
       "Field setup",
       "QC checks",
@@ -96,6 +104,9 @@
   "Kemin Special Project": {
     "summary": "The special project is focused on contract validation and final reporting, with a smaller task set but tighter executive visibility.",
     "budget": "TBD",
+    "subjects": [
+      "TBD"
+    ],
     "trials": [
       "Contract verification",
       "Final reporting"

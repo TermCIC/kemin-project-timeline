@@ -473,6 +473,7 @@
                                     <th scope="col">Trial type</th>
                                     <th scope="col">Scheduled date</th>
                                     <th scope="col">Expected finish</th>
+                                    <th scope="col">Cost</th>
                                     <th scope="col">Status</th>
                                 </tr>
                             </thead>
@@ -600,6 +601,7 @@
                     <td>${task.trial_type}</td>
                     <td>${formatDate(task.scheduled_date)}</td>
                     <td>${formatDate(task.expected_finish_date)}</td>
+                    <td>${task.cost || "-"}</td>
                     <td><span class="status-badge ${statusClassMap[task.status]}">${task.status}</span></td>
                 </tr>
             `).join("");
