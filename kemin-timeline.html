@@ -340,6 +340,28 @@
             line-height: 1.5;
         }
 
+        .timeline-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+            align-items: center;
+        }
+
+        .timeline-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .timeline-dates {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
         .timeline-track {
             position: relative;
             min-height: 34px;
@@ -355,13 +377,6 @@
             height: 20px;
             min-width: 10px;
             border-radius: 999px;
-            padding: 0 10px;
-            display: inline-flex;
-            align-items: center;
-            font-size: 0.78rem;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
         }
 
         .timeline-bar.status-completed {
@@ -793,11 +808,13 @@
                             <div class="timeline-label">
                                 <strong>${task.experiment_id}</strong>
                                 <span>${task.trial_name || task.subject}</span>
+                                <div class="timeline-meta">
+                                    <span class="timeline-chip ${getStatusClass(task.status)}">${task.trial_type}</span>
+                                    <span class="timeline-dates">${formatDate(task.safeStart)} to ${formatDate(task.safeEnd)}</span>
+                                </div>
                             </div>
                             <div class="timeline-track">
-                                <div class="timeline-bar ${getStatusClass(task.status)}" style="left:${left}%; width:${width}%;">
-                                    ${task.trial_type}
-                                </div>
+                                <div class="timeline-bar ${getStatusClass(task.status)}" style="left:${left}%; width:${width}%;" title="${task.trial_type}: ${task.trial_name || task.subject}"></div>
                             </div>
                         </div>
                     `;
