@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kemin Project Editor</title>
+    <style>
+        :root {
+            --bg: #f4efe7;
+            --panel: #ffffff;
+            --ink: #1b2230;
+            --muted: #677081;
+            --line: #d9ddd7;
+            --brand: #134e4a;
+            --brand-strong: #0f3f3c;
+            --accent: #c26a2d;
+            --danger: #b42318;
+            --radius: 18px;
+            --shadow: 0 20px 50px rgba(27, 34, 48, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(19, 78, 74, 0.15), transparent 26%),
+                linear-gradient(180deg, #efe7da 0%, #f7f3ec 52%, #f2eee7 100%);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .app {
+            max-width: 1380px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 320px minmax(0, 1fr);
+            gap: 20px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(14px);
+        }
+
+        .sidebar,
+        .content {
+            padding: 22px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin: 0;
+        }
+
+        .intro {
+            margin-bottom: 18px;
+        }
+
+        .intro p,
+        .hint,
+        .status-note {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .stack {
+            display: grid;
+            gap: 12px;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+            border-radius: 12px;
+            padding: 11px 14px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .primary {
+            background: var(--brand);
+            color: #fff;
+        }
+
+        .primary:hover {
+            background: var(--brand-strong);
+        }
+
+        .secondary {
+            background: #e9ece7;
+            color: var(--ink);
+        }
+
+        .danger {
+            background: #fce8e6;
+            color: var(--danger);
+        }
+
+        .project-list {
+            margin-top: 16px;
+            display: grid;
+            gap: 8px;
+            max-height: 58vh;
+            overflow: auto;
+            padding-right: 4px;
+        }
+
+        .project-item {
+            width: 100%;
+            text-align: left;
+            background: #f7f4ed;
+            color: var(--ink);
+            border: 1px solid var(--line);
+        }
+
+        .project-item.active {
+            background: var(--brand);
+            color: #fff;
+            border-color: var(--brand);
+        }
+
+        .content-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .status-bar {
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: #f7f4ed;
+            border: 1px solid var(--line);
+        }
+
+        .grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .meta-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: #fff;
+            color: var(--ink);
+            padding: 12px 14px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .tasks {
+            margin-top: 22px;
+        }
+
+        .tasks-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .task-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .task-card {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 16px;
+            background: #fff;
+        }
+
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .task-grid .field.wide {
+            grid-column: span 2;
+        }
+
+        .task-tools {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .mono {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .empty {
+            border: 1px dashed var(--line);
+            border-radius: 16px;
+            padding: 18px;
+            color: var(--muted);
+            background: #fff;
+        }
+
+        @media (max-width: 1100px) {
+            .app {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 12px;
+            }
+
+            .meta-grid,
+            .task-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .task-grid .field.wide {
+                grid-column: auto;
+            }
+
+            .content-head,
+            .tasks-head,
+            .task-tools {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="panel sidebar">
+            <div class="intro">
+                <h1>Kemin Project Editor</h1>
+                <p>Edit individual project JSON files and rebuild the combined <span class="mono">projects.json</span> used by the timeline site.</p>
+            </div>
+
+            <div class="stack">
+                <button class="primary" id="openFolderButton">Open Projects Folder</button>
+                <button class="secondary" id="newProjectButton" disabled>New Project</button>
+                <button class="secondary" id="refreshButton" disabled>Refresh File List</button>
+                <button class="primary" id="rebuildButton" disabled>Rebuild projects.json</button>
+            </div>
+
+            <p class="hint">Use a Chromium-based browser such as Edge or Chrome. This editor uses the File System Access API to read and write files in your selected <span class="mono">projects</span> folder.</p>
+
+            <div class="project-list" id="projectList">
+                <div class="empty">Open the <span class="mono">projects</span> folder to begin.</div>
+            </div>
+        </aside>
+
+        <main class="panel content">
+            <div class="content-head">
+                <div>
+                    <h2>Project Form</h2>
+                    <p class="status-note">Create a new project file or edit an existing one, then save it back into the folder.</p>
+                </div>
+                <div class="actions">
+                    <button class="primary" id="saveButton" disabled>Save Project File</button>
+                </div>
+            </div>
+
+            <div class="status-bar" id="statusBar">No folder selected.</div>
+
+            <form id="projectForm">
+                <div class="grid meta-grid">
+                    <div class="field">
+                        <label for="fileName">File name</label>
+                        <input id="fileName" type="text" placeholder="example-project.json">
+                    </div>
+                    <div class="field">
+                        <label for="projectName">Project name</label>
+                        <input id="projectName" type="text" placeholder="Project name">
+                    </div>
+                    <div class="field full">
+                        <label for="summary">Summary</label>
+                        <textarea id="summary" placeholder="Project summary"></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="budget">Budget</label>
+                        <input id="budget" type="text" placeholder="THB 334,488.00">
+                    </div>
+                    <div class="field">
+                        <label for="subjects">Subjects</label>
+                        <textarea id="subjects" placeholder="One subject per line"></textarea>
+                    </div>
+                    <div class="field full">
+                        <label for="trials">Trials</label>
+                        <textarea id="trials" placeholder="One trial per line"></textarea>
+                    </div>
+                </div>
+
+                <section class="tasks">
+                    <div class="tasks-head">
+                        <div>
+                            <h3>Tasks</h3>
+                            <p class="status-note">Add as many tasks as needed. Each task is saved into the project JSON file.</p>
+                        </div>
+                        <button type="button" class="secondary" id="addTaskButton">Add Task</button>
+                    </div>
+
+                    <div class="task-list" id="taskList">
+                        <div class="empty">No tasks added yet.</div>
+                    </div>
+                </section>
+            </form>
+        </main>
+    </div>
+
+    <template id="taskTemplate">
+        <article class="task-card">
+            <div class="task-tools">
+                <strong class="task-title">Task</strong>
+                <button type="button" class="danger remove-task">Remove Task</button>
+            </div>
+            <div class="task-grid">
+                <div class="field">
+                    <label>Experiment ID</label>
+                    <input class="task-experiment-id" type="text" placeholder="S2-001">
+                </div>
+                <div class="field wide">
+                    <label>Subject</label>
+                    <input class="task-subject" type="text" placeholder="Task subject">
+                </div>
+                <div class="field">
+                    <label>Trial Type</label>
+                    <input class="task-trial-type" type="text" placeholder="Bioassay trial">
+                </div>
+                <div class="field">
+                    <label>Scheduled Date</label>
+                    <input class="task-scheduled-date" type="date">
+                </div>
+                <div class="field">
+                    <label>Expected Finish</label>
+                    <input class="task-expected-finish-date" type="date">
+                </div>
+                <div class="field">
+                    <label>Cost</label>
+                    <input class="task-cost" type="text" placeholder="THB 83,622.00">
+                </div>
+                <div class="field">
+                    <label>Status</label>
+                    <select class="task-status">
+                        <option>Pending</option>
+                        <option>In Progress</option>
+                        <option>Completed</option>
+                    </select>
+                </div>
+            </div>
+        </article>
+    </template>
+
+    <script>
+        const openFolderButton = document.getElementById("openFolderButton");
+        const newProjectButton = document.getElementById("newProjectButton");
+        const refreshButton = document.getElementById("refreshButton");
+        const rebuildButton = document.getElementById("rebuildButton");
+        const saveButton = document.getElementById("saveButton");
+        const statusBar = document.getElementById("statusBar");
+        const projectList = document.getElementById("projectList");
+        const projectForm = document.getElementById("projectForm");
+        const taskList = document.getElementById("taskList");
+        const taskTemplate = document.getElementById("taskTemplate");
+
+        const fileNameInput = document.getElementById("fileName");
+        const projectNameInput = document.getElementById("projectName");
+        const summaryInput = document.getElementById("summary");
+        const budgetInput = document.getElementById("budget");
+        const subjectsInput = document.getElementById("subjects");
+        const trialsInput = document.getElementById("trials");
+        const addTaskButton = document.getElementById("addTaskButton");
+
+        let folderHandle = null;
+        let currentFileName = "";
+        let currentProjectFiles = [];
+
+        function setStatus(message) {
+            statusBar.textContent = message;
+        }
+
+        function slugify(value) {
+            return value
+                .toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "") || "new-project";
+        }
+
+        function normalizeFileName(value) {
+            const trimmed = value.trim();
+            if (!trimmed) {
+                return "";
+            }
+            return trimmed.endsWith(".json") ? trimmed : `${trimmed}.json`;
+        }
+
+        function linesToArray(value) {
+            return value
+                .split(/\r?\n/)
+                .map(item => item.trim())
+                .filter(Boolean);
+        }
+
+        function clearTasks() {
+            taskList.innerHTML = '<div class="empty">No tasks added yet.</div>';
+        }
+
+        function ensureTaskContainer() {
+            const emptyState = taskList.querySelector(".empty");
+            if (emptyState) {
+                taskList.innerHTML = "";
+            }
+        }
+
+        function addTaskCard(task = {}) {
+            ensureTaskContainer();
+            const fragment = taskTemplate.content.cloneNode(true);
+            const card = fragment.querySelector(".task-card");
+
+            card.querySelector(".task-experiment-id").value = task.experiment_id || "";
+            card.querySelector(".task-subject").value = task.subject || "";
+            card.querySelector(".task-trial-type").value = task.trial_type || "";
+            card.querySelector(".task-scheduled-date").value = task.scheduled_date || "";
+            card.querySelector(".task-expected-finish-date").value = task.expected_finish_date || "";
+            card.querySelector(".task-cost").value = task.cost || "";
+            card.querySelector(".task-status").value = task.status || "Pending";
+
+            card.querySelector(".remove-task").addEventListener("click", () => {
+                card.remove();
+                if (!taskList.children.length) {
+                    clearTasks();
+                }
+            });
+
+            taskList.appendChild(fragment);
+        }
+
+        function readTaskCards() {
+            return Array.from(taskList.querySelectorAll(".task-card")).map(card => ({
+                experiment_id: card.querySelector(".task-experiment-id").value.trim(),
+                subject: card.querySelector(".task-subject").value.trim(),
+                trial_type: card.querySelector(".task-trial-type").value.trim(),
+                scheduled_date: card.querySelector(".task-scheduled-date").value,
+                expected_finish_date: card.querySelector(".task-expected-finish-date").value,
+                cost: card.querySelector(".task-cost").value.trim(),
+                status: card.querySelector(".task-status").value
+            })).filter(task => task.experiment_id || task.subject || task.trial_type);
+        }
+
+        function getFormData() {
+            const projectName = projectNameInput.value.trim();
+            const fileName = normalizeFileName(fileNameInput.value) || `${slugify(projectName)}.json`;
+
+            return {
+                fileName,
+                data: {
+                    project_name: projectName,
+                    summary: summaryInput.value.trim(),
+                    budget: budgetInput.value.trim(),
+                    subjects: linesToArray(subjectsInput.value),
+                    trials: linesToArray(trialsInput.value),
+                    tasks: readTaskCards()
+                }
+            };
+        }
+
+        function loadProjectIntoForm(fileName, project) {
+            currentFileName = fileName;
+            fileNameInput.value = fileName;
+            projectNameInput.value = project.project_name || "";
+            summaryInput.value = project.summary || "";
+            budgetInput.value = project.budget || "";
+            subjectsInput.value = (project.subjects || []).join("\n");
+            trialsInput.value = (project.trials || []).join("\n");
+
+            clearTasks();
+            (project.tasks || []).forEach(addTaskCard);
+            if (!(project.tasks || []).length) {
+                clearTasks();
+            }
+
+            highlightCurrentFile();
+            setStatus(`Editing ${fileName}`);
+        }
+
+        async function readJsonFile(fileName) {
+            const fileHandle = await folderHandle.getFileHandle(fileName);
+            const file = await fileHandle.getFile();
+            return JSON.parse(await file.text());
+        }
+
+        async function writeJsonFile(fileName, data) {
+            const fileHandle = await folderHandle.getFileHandle(fileName, { create: true });
+            const writable = await fileHandle.createWritable();
+            await writable.write(`${JSON.stringify(data, null, 2)}\n`);
+            await writable.close();
+        }
+
+        function highlightCurrentFile() {
+            Array.from(projectList.querySelectorAll(".project-item")).forEach(button => {
+                button.classList.toggle("active", button.dataset.fileName === currentFileName);
+            });
+        }
+
+        async function refreshProjectList() {
+            currentProjectFiles = [];
+
+            for await (const [name, handle] of folderHandle.entries()) {
+                if (handle.kind !== "file" || !name.endsWith(".json") || name === "projects.json") {
+                    continue;
+                }
+                currentProjectFiles.push(name);
+            }
+
+            currentProjectFiles.sort((a, b) => a.localeCompare(b));
+
+            if (!currentProjectFiles.length) {
+                projectList.innerHTML = '<div class="empty">No individual project JSON files found yet.</div>';
+                return;
+            }
+
+            projectList.innerHTML = "";
+            currentProjectFiles.forEach(fileName => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "project-item";
+                button.dataset.fileName = fileName;
+                button.textContent = fileName;
+                button.addEventListener("click", async () => {
+                    const project = await readJsonFile(fileName);
+                    loadProjectIntoForm(fileName, project);
+                });
+                projectList.appendChild(button);
+            });
+
+            highlightCurrentFile();
+        }
+
+        async function rebuildAggregateFile() {
+            const aggregate = {};
+
+            for (const fileName of currentProjectFiles) {
+                const project = await readJsonFile(fileName);
+                if (!project.project_name) {
+                    continue;
+                }
+                aggregate[project.project_name] = {
+                    summary: project.summary || "",
+                    budget: project.budget || "",
+                    subjects: project.subjects || [],
+                    trials: project.trials || [],
+                    tasks: project.tasks || []
+                };
+            }
+
+            await writeJsonFile("projects.json", aggregate);
+            setStatus("Rebuilt projects.json from the individual project files.");
+        }
+
+        function resetFormForNewProject() {
+            currentFileName = "";
+            fileNameInput.value = "";
+            projectForm.reset();
+            clearTasks();
+            highlightCurrentFile();
+            setStatus("Creating a new project file.");
+        }
+
+        openFolderButton.addEventListener("click", async () => {
+            if (!window.showDirectoryPicker) {
+                setStatus("This browser does not support the File System Access API.");
+                return;
+            }
+
+            try {
+                folderHandle = await window.showDirectoryPicker();
+                newProjectButton.disabled = false;
+                refreshButton.disabled = false;
+                rebuildButton.disabled = false;
+                saveButton.disabled = false;
+                await refreshProjectList();
+                setStatus(`Connected to folder: ${folderHandle.name}`);
+            } catch (error) {
+                setStatus("Folder selection was cancelled.");
+            }
+        });
+
+        newProjectButton.addEventListener("click", () => {
+            resetFormForNewProject();
+        });
+
+        refreshButton.addEventListener("click", async () => {
+            if (!folderHandle) {
+                return;
+            }
+            await refreshProjectList();
+            setStatus("Project file list refreshed.");
+        });
+
+        rebuildButton.addEventListener("click", async () => {
+            if (!folderHandle) {
+                return;
+            }
+            await refreshProjectList();
+            await rebuildAggregateFile();
+        });
+
+        saveButton.addEventListener("click", async () => {
+            if (!folderHandle) {
+                setStatus("Open the projects folder first.");
+                return;
+            }
+
+            const { fileName, data } = getFormData();
+            if (!data.project_name) {
+                setStatus("Project name is required.");
+                return;
+            }
+
+            if (!fileName) {
+                setStatus("File name is required.");
+                return;
+            }
+
+            await writeJsonFile(fileName, data);
+            currentFileName = fileName;
+            fileNameInput.value = fileName;
+            await refreshProjectList();
+            await rebuildAggregateFile();
+            setStatus(`Saved ${fileName} and rebuilt projects.json.`);
+        });
+
+        addTaskButton.addEventListener("click", () => {
+            addTaskCard();
+        });
+
+        clearTasks();
+    </script>
+</body>
+</html>
