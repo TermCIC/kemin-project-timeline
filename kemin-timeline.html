@@ -121,6 +121,23 @@
             font-weight: 600;
         }
 
+        .trials-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .trial-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: var(--brand-soft);
+            color: var(--brand);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -400,13 +417,21 @@
                                 <div class="detail-label">Expected finish</div>
                                 <div class="detail-value" id="expectedFinish"></div>
                                 </div>
-                                <div class="detail-item">
-                                    <div class="detail-label">Completion pace</div>
-                                    <div class="detail-value" id="completionPace"></div>
+                            <div class="detail-item">
+                                <div class="detail-label">Completion pace</div>
+                                <div class="detail-value" id="completionPace"></div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Budget</div>
+                                <div class="detail-value" id="budgetValue"></div>
                             </div>
                             <div class="detail-item">
                                 <div class="detail-label">Open actions</div>
                                 <div class="detail-value" id="openActions"></div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Trials</div>
+                                <div class="trials-list" id="trialsList"></div>
                             </div>
                         </div>
 
@@ -482,6 +507,8 @@
         const projectSummary = document.getElementById("projectSummary");
         const scheduledStart = document.getElementById("scheduledStart");
         const expectedFinish = document.getElementById("expectedFinish");
+        const budgetValue = document.getElementById("budgetValue");
+        const trialsList = document.getElementById("trialsList");
         const completionPace = document.getElementById("completionPace");
         const openActions = document.getElementById("openActions");
         const metricTotal = document.getElementById("metricTotal");
@@ -504,6 +531,8 @@
             projectSummary.textContent = message;
             scheduledStart.textContent = "-";
             expectedFinish.textContent = "-";
+            budgetValue.textContent = "-";
+            trialsList.innerHTML = "";
             completionPace.textContent = "-";
             openActions.textContent = "-";
             metricTotal.textContent = "0";
@@ -585,6 +614,10 @@
             projectSummary.textContent = project.summary || "No project summary available.";
             scheduledStart.textContent = stats.projectStart ? formatDate(stats.projectStart.scheduled_date) : "No scheduled date";
             expectedFinish.textContent = stats.projectFinish ? formatDate(stats.projectFinish.expected_finish_date) : "No expected finish";
+            budgetValue.textContent = project.budget || "Not specified";
+            trialsList.innerHTML = (project.trials || [])
+                .map(trial => `<span class="trial-pill">${trial}</span>`)
+                .join("");
             completionPace.textContent = `${stats.completionPercent}% complete`;
             openActions.textContent = `${stats.atRisk} active follow-ups`;
             metricTotal.textContent = String(stats.total);
