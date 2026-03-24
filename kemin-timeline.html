@@ -351,6 +351,15 @@
             line-height: 1.5;
         }
 
+        .timeline-subject {
+            display: block;
+            color: var(--ink);
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-top: 2px;
+        }
+
         .timeline-meta {
             display: flex;
             flex-wrap: wrap;
@@ -838,7 +847,8 @@
                         <div class="timeline-row">
                             <div class="timeline-label">
                                 <strong>${task.experiment_id}</strong>
-                                <span>${task.trial_name || task.subject}</span>
+                                <span>${task.trial_name || "-"}</span>
+                                <span class="timeline-subject">${task.subject || "-"}</span>
                                 <div class="timeline-meta">
                                     <span class="timeline-chip ${getStatusClass(task.status)}">${task.trial_type}</span>
                                     <span class="timeline-dates">${formatDate(task.safeStart)} to ${formatDate(task.safeEnd)}</span>
