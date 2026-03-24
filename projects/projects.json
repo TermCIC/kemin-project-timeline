@@ -1,5 +1,5 @@
 {
-  "Study 2: CMU Research Agreement": {
+  "Screening of Chemicals Against Weevil (Sitophiluszeamais), Beetles (Tribolium sp.), and Storage Mite (Suidasia pontifica)": {
     "summary": "Research agreement with Chiang Mai University for screening chemicals against Sitophilus zeamais, Tribolium sp., and Suidasia pontifica under the October 20, 2025 agreement and Statement of Work 1 performance period.",
     "budget": "THB 334,488.00",
     "subjects": [
@@ -14,121 +14,13 @@
     ],
     "tasks": [
       {
-        "experiment_id": "S2-001",
-        "subject": "Agreement execution and initial 50% payment release",
-        "trial_type": "Contract milestone",
-        "scheduled_date": "2025-10-20",
-        "expected_finish_date": "2025-10-27",
-        "cost": "THB 167,244.00",
+        "experiment_id": "S1-001",
+        "subject": "Suidasia pontifica",
+        "trial_type": "Contact toxicity",
+        "scheduled_date": "2025-11-20",
+        "expected_finish_date": "2025-11-20",
+        "cost": "THB 147,20.00",
         "status": "Completed"
-      },
-      {
-        "experiment_id": "S2-002",
-        "subject": "Ship 8 proprietary materials to Chiang Mai University",
-        "trial_type": "Material preparation",
-        "scheduled_date": "2025-10-25",
-        "expected_finish_date": "2025-10-25",
-        "cost": "Included in project budget",
-        "status": "Completed"
-      },
-      {
-        "experiment_id": "S2-003",
-        "subject": "Conduct bioassay research program at CMU facilities",
-        "trial_type": "Bioassay trial",
-        "scheduled_date": "2025-10-25",
-        "expected_finish_date": "2026-03-31",
-        "cost": "THB 83,622.00",
-        "status": "In Progress"
-      },
-      {
-        "experiment_id": "S2-004",
-        "subject": "Complete project work and trigger 25% completion payment",
-        "trial_type": "Completion milestone",
-        "scheduled_date": "2026-03-31",
-        "expected_finish_date": "2026-03-31",
-        "cost": "THB 83,622.00",
-        "status": "Pending"
-      },
-      {
-        "experiment_id": "S2-005",
-        "subject": "Submit final report with raw data, statistics, and summary tables",
-        "trial_type": "Reporting",
-        "scheduled_date": "2026-04-01",
-        "expected_finish_date": "2026-04-30",
-        "cost": "Included in final payment",
-        "status": "Pending"
-      }
-    ]
-  },
-  "Kemin Batch 2": {
-    "summary": "Batch 2 is still in delivery buildout, with field preparation active and downstream quality work scheduled across May.",
-    "budget": "TBD",
-    "subjects": [
-      "TBD"
-    ],
-    "trials": [
-      "Field setup",
-      "QC checks",
-      "Summary review"
-    ],
-    "tasks": [
-      {
-        "experiment_id": "T-201",
-        "subject": "Prepare field setup",
-        "trial_type": "Field setup",
-        "scheduled_date": "2026-04-20",
-        "expected_finish_date": "2026-05-02",
-        "cost": "TBD",
-        "status": "In Progress"
-      },
-      {
-        "experiment_id": "T-202",
-        "subject": "Perform QC checks",
-        "trial_type": "Quality control",
-        "scheduled_date": "2026-05-05",
-        "expected_finish_date": "2026-05-15",
-        "cost": "TBD",
-        "status": "Pending"
-      },
-      {
-        "experiment_id": "T-203",
-        "subject": "Review trial summary",
-        "trial_type": "Review",
-        "scheduled_date": "2026-05-20",
-        "expected_finish_date": "2026-05-30",
-        "cost": "TBD",
-        "status": "Pending"
-      }
-    ]
-  },
-  "Kemin Special Project": {
-    "summary": "The special project is focused on contract validation and final reporting, with a smaller task set but tighter executive visibility.",
-    "budget": "TBD",
-    "subjects": [
-      "TBD"
-    ],
-    "trials": [
-      "Contract verification",
-      "Final reporting"
-    ],
-    "tasks": [
-      {
-        "experiment_id": "T-301",
-        "subject": "Verify contract items",
-        "trial_type": "Verification",
-        "scheduled_date": "2026-06-01",
-        "expected_finish_date": "2026-06-10",
-        "cost": "TBD",
-        "status": "In Progress"
-      },
-      {
-        "experiment_id": "T-302",
-        "subject": "Submit final report",
-        "trial_type": "Reporting",
-        "scheduled_date": "2026-06-15",
-        "expected_finish_date": "2026-06-25",
-        "cost": "TBD",
-        "status": "Pending"
       }
     ]
   }
