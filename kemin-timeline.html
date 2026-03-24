@@ -138,6 +138,24 @@
             font-weight: 600;
         }
 
+        .subjects-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .subject-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #f7f4ed;
+            color: var(--ink);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid rgba(19, 78, 74, 0.12);
+        }
+
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -426,6 +444,10 @@
                                 <div class="detail-value" id="budgetValue"></div>
                             </div>
                             <div class="detail-item">
+                                <div class="detail-label">Subjects</div>
+                                <div class="subjects-list" id="subjectsList"></div>
+                            </div>
+                            <div class="detail-item">
                                 <div class="detail-label">Open actions</div>
                                 <div class="detail-value" id="openActions"></div>
                             </div>
@@ -509,6 +531,7 @@
         const scheduledStart = document.getElementById("scheduledStart");
         const expectedFinish = document.getElementById("expectedFinish");
         const budgetValue = document.getElementById("budgetValue");
+        const subjectsList = document.getElementById("subjectsList");
         const trialsList = document.getElementById("trialsList");
         const completionPace = document.getElementById("completionPace");
         const openActions = document.getElementById("openActions");
@@ -533,6 +556,7 @@
             scheduledStart.textContent = "-";
             expectedFinish.textContent = "-";
             budgetValue.textContent = "-";
+            subjectsList.innerHTML = "";
             trialsList.innerHTML = "";
             completionPace.textContent = "-";
             openActions.textContent = "-";
@@ -617,6 +641,9 @@
             scheduledStart.textContent = stats.projectStart ? formatDate(stats.projectStart.scheduled_date) : "No scheduled date";
             expectedFinish.textContent = stats.projectFinish ? formatDate(stats.projectFinish.expected_finish_date) : "No expected finish";
             budgetValue.textContent = project.budget || "Not specified";
+            subjectsList.innerHTML = (project.subjects || [])
+                .map(subject => `<span class="subject-pill">${subject}</span>`)
+                .join("");
             trialsList.innerHTML = (project.trials || [])
                 .map(trial => `<span class="trial-pill">${trial}</span>`)
                 .join("");
