@@ -1260,7 +1260,10 @@
         }
 
         async function loadProjects() {
-            const response = await fetch("./projects/projects.json");
+            const cacheBust = `v=${Date.now()}`;
+            const response = await fetch(`./projects/projects.json?${cacheBust}`, {
+                cache: "no-store"
+            });
             if (!response.ok) {
                 throw new Error(`Failed to load project index: ${response.status}`);
             }
@@ -1273,7 +1276,9 @@
                         return null;
                     }
 
-                    const projectResponse = await fetch(`./projects/${encodeURIComponent(fileName)}`);
+                    const projectResponse = await fetch(`./projects/${encodeURIComponent(fileName)}?${cacheBust}`, {
+                        cache: "no-store"
+                    });
                     if (!projectResponse.ok) {
                         throw new Error(`Failed to load ${fileName}: ${projectResponse.status}`);
                     }
