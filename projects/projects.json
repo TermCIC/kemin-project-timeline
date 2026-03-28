@@ -192,7 +192,7 @@
         "scheduled_date": "2026-03-18",
         "expected_finish_date": "2026-03-19",
         "cost": "THB 15,120.00",
-        "status": "In Progress"
+        "status": "Completed"
       },
       {
         "experiment_id": "TR3-001",
@@ -202,7 +202,7 @@
         "scheduled_date": "2026-03-18",
         "expected_finish_date": "2026-03-19",
         "cost": "THB 15,120.00",
-        "status": "In Progress"
+        "status": "Completed"
       },
       {
         "experiment_id": "SZ3-002",

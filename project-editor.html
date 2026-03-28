@@ -678,24 +678,20 @@
         }
 
         async function rebuildAggregateFile() {
-            const aggregate = {};
+            const index = {
+                projects: []
+            };
 
             for (const fileName of currentProjectFiles) {
                 const project = await readJsonFile(fileName);
-                if (!project.project_name) {
-                    continue;
-                }
-                aggregate[project.project_name] = {
-                    summary: project.summary || "",
-                    budget: project.budget || "",
-                    subjects: project.subjects || [],
-                    trials: project.trials || [],
-                    tasks: project.tasks || []
-                };
+                index.projects.push({
+                    file_name: fileName,
+                    project_name: project.project_name || ""
+                });
             }
 
-            await writeJsonFile("projects.json", aggregate);
-            setStatus("Rebuilt projects.json from the individual project files.");
+            await writeJsonFile("projects.json", index);
+            setStatus("Rebuilt projects.json as an index of individual project files.");
         }
 
         function resetFormForNewProject() {
@@ -768,7 +764,7 @@
             fileNameInput.value = fileName;
             await refreshProjectList();
             await rebuildAggregateFile();
-            setStatus(`Saved ${fileName} and rebuilt projects.json.`);
+            setStatus(`Saved ${fileName} and rebuilt the project index.`);
         });
 
         addTaskButton.addEventListener("click", () => {

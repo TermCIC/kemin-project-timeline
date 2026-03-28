@@ -1262,22 +1262,44 @@
         async function loadProjects() {
             const response = await fetch("./projects/projects.json");
             if (!response.ok) {
-                throw new Error(`Failed to load projects: ${response.status}`);
+                throw new Error(`Failed to load project index: ${response.status}`);
             }
-            return response.json();
+
+            const index = await response.json();
+            if (index && Array.isArray(index.projects)) {
+                const loadedProjects = await Promise.all(index.projects.map(async entry => {
+                    const fileName = entry?.file_name;
+                    if (!fileName) {
+                        return null;
+                    }
+
+                    const projectResponse = await fetch(`./projects/${encodeURIComponent(fileName)}`);
+                    if (!projectResponse.ok) {
+                        throw new Error(`Failed to load ${fileName}: ${projectResponse.status}`);
+                    }
+
+                    const project = await projectResponse.json();
+                    const projectKey = project.project_name || entry.project_name || fileName;
+                    return [projectKey, project];
+                }));
+
+                return Object.fromEntries(loadedProjects.filter(Boolean));
+            }
+
+            return index;
         }
 
         async function init() {
             try {
                 projects = await loadProjects();
             } catch (error) {
-                renderLoadError("Check that projects/projects.json exists and the site is being served over HTTP.");
+                renderLoadError("Check that projects/projects.json exists, the individual project files are present, and the site is being served over HTTP.");
                 return;
             }
 
             const projectNames = Object.keys(projects);
             if (!projectNames.length) {
-                renderLoadError("No projects were found in projects/projects.json.");
+                renderLoadError("No projects were found in the project index.");
                 return;
             }
 
