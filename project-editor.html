@@ -410,8 +410,8 @@
                     <input class="task-cost" type="text" placeholder="THB 83,622.00">
                 </div>
                 <div class="field wide">
-                    <label>Report URL</label>
-                    <input class="task-report-url" type="text" placeholder="./reports/SP1-001-report.pdf">
+                    <label>Report Files</label>
+                    <textarea class="task-report-files" placeholder="One file per line&#10;Example: Report PDF|./reports/SP1-001-report.pdf&#10;Example: Raw image|./reports/SP1-001-photo.png"></textarea>
                 </div>
                 <div class="field">
                     <label>Status</label>
@@ -476,6 +476,57 @@
                 .filter(Boolean);
         }
 
+        function getFileNameFromPath(value) {
+            const cleanValue = String(value || "").split(/[?#]/)[0];
+            const parts = cleanValue.split("/");
+            return parts[parts.length - 1] || "Attachment";
+        }
+
+        function parseReportFiles(value) {
+            return linesToArray(value)
+                .map(line => {
+                    const separatorIndex = line.indexOf("|");
+                    if (separatorIndex === -1) {
+                        return {
+                            name: getFileNameFromPath(line),
+                            url: line
+                        };
+                    }
+
+                    const name = line.slice(0, separatorIndex).trim();
+                    const url = line.slice(separatorIndex + 1).trim();
+                    if (!url) {
+                        return null;
+                    }
+
+                    return {
+                        name: name || getFileNameFromPath(url),
+                        url
+                    };
+                })
+                .filter(item => item && item.url);
+        }
+
+        function formatReportFiles(task) {
+            const reportFiles = Array.isArray(task.report_files) ? task.report_files : [];
+            if (reportFiles.length) {
+                return reportFiles
+                    .map(file => {
+                        if (!file || !file.url) {
+                            return "";
+                        }
+                        const name = (file.name || "").trim();
+                        return name && name !== getFileNameFromPath(file.url)
+                            ? `${name}|${file.url}`
+                            : file.url;
+                    })
+                    .filter(Boolean)
+                    .join("\n");
+            }
+
+            return task.report_url || "";
+        }
+
         function clearTasks() {
             taskList.innerHTML = '<div class="empty">No tasks added yet.</div>';
         }
@@ -488,6 +539,7 @@
         }
 
         function getTaskDataFromCard(card) {
+            const reportFiles = parseReportFiles(card.querySelector(".task-report-files").value);
             return {
                 experiment_id: card.querySelector(".task-experiment-id").value.trim(),
                 subject: card.querySelector(".task-subject").value.trim(),
@@ -496,7 +548,7 @@
                 scheduled_date: card.querySelector(".task-scheduled-date").value,
                 expected_finish_date: card.querySelector(".task-expected-finish-date").value,
                 cost: card.querySelector(".task-cost").value.trim(),
-                report_url: card.querySelector(".task-report-url").value.trim(),
+                report_files: reportFiles,
                 status: card.querySelector(".task-status").value
             };
         }
@@ -513,7 +565,7 @@
             card.querySelector(".task-scheduled-date").value = task.scheduled_date || "";
             card.querySelector(".task-expected-finish-date").value = task.expected_finish_date || "";
             card.querySelector(".task-cost").value = task.cost || "";
-            card.querySelector(".task-report-url").value = task.report_url || "";
+            card.querySelector(".task-report-files").value = formatReportFiles(task);
             card.querySelector(".task-status").value = task.status || "Pending";
 
             card.querySelector(".copy-task").addEventListener("click", () => {

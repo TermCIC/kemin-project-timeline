@@ -530,6 +530,124 @@
             background: var(--brand-strong);
         }
 
+        .report-link.report-button {
+            border: 0;
+            cursor: pointer;
+        }
+
+        .report-count {
+            display: block;
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .report-modal[hidden] {
+            display: none;
+        }
+
+        .report-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 30;
+            display: grid;
+            place-items: center;
+            padding: 18px;
+            background: rgba(27, 34, 48, 0.42);
+            backdrop-filter: blur(8px);
+        }
+
+        .report-modal-panel {
+            width: min(100%, 640px);
+            max-height: min(80vh, 720px);
+            overflow: auto;
+            border-radius: var(--radius-xl);
+            background: var(--panel-strong);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(27, 34, 48, 0.08);
+        }
+
+        .report-modal-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: start;
+            padding: 22px 24px 18px;
+            border-bottom: 1px solid var(--line);
+            background: #f7f4ed;
+        }
+
+        .report-modal-title {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 1.25rem;
+            margin-bottom: 4px;
+        }
+
+        .report-modal-copy {
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 0.92rem;
+        }
+
+        .report-close {
+            min-width: 42px;
+            min-height: 42px;
+            border: 1px solid rgba(27, 34, 48, 0.12);
+            border-radius: 999px;
+            background: #fff;
+            color: var(--ink);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .report-file-list {
+            display: grid;
+            gap: 12px;
+            padding: 20px 24px 24px;
+        }
+
+        .report-file-card {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            align-items: center;
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(27, 34, 48, 0.08);
+            background: #fffdfa;
+        }
+
+        .report-file-name {
+            font-weight: 700;
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+
+        .report-file-path {
+            color: var(--muted);
+            font-size: 0.86rem;
+            word-break: break-all;
+        }
+
+        .report-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: var(--brand);
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.84rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .report-download:hover {
+            background: var(--brand-strong);
+        }
+
         .progress-track {
             width: 100%;
             height: 12px;
@@ -723,6 +841,19 @@
         </footer>
     </div>
 
+    <div class="report-modal" id="reportModal" hidden>
+        <div class="report-modal-panel" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
+            <div class="report-modal-head">
+                <div>
+                    <div class="report-modal-title" id="reportModalTitle">Task attachments</div>
+                    <div class="report-modal-copy" id="reportModalCopy">Download files attached to this finished task.</div>
+                </div>
+                <button type="button" class="report-close" id="closeReportModal" aria-label="Close attachments panel">Close</button>
+            </div>
+            <div class="report-file-list" id="reportFileList"></div>
+        </div>
+    </div>
+
     <script>
         let projects = {};
         const statusClassMap = {
@@ -749,6 +880,11 @@
         const metricAtRisk = document.getElementById("metricAtRisk");
         const progressFill = document.getElementById("progressFill");
         const progressValue = document.getElementById("progressValue");
+        const reportModal = document.getElementById("reportModal");
+        const reportModalTitle = document.getElementById("reportModalTitle");
+        const reportModalCopy = document.getElementById("reportModalCopy");
+        const reportFileList = document.getElementById("reportFileList");
+        const closeReportModal = document.getElementById("closeReportModal");
         let currentProjectKey = "";
 
         function formatDate(dateValue) {
@@ -775,6 +911,92 @@
                 .replace(/^-+|-+$/g, "") || "project";
         }
 
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function getFileNameFromUrl(url) {
+            const cleanUrl = String(url || "").split(/[?#]/)[0];
+            const parts = cleanUrl.split("/");
+            return parts[parts.length - 1] || "Download file";
+        }
+
+        function normalizeReportFile(file) {
+            if (!file) {
+                return null;
+            }
+
+            if (typeof file === "string") {
+                const url = file.trim();
+                return url ? { name: getFileNameFromUrl(url), url } : null;
+            }
+
+            const url = String(file.url || file.path || file.href || "").trim();
+            if (!url) {
+                return null;
+            }
+
+            return {
+                name: String(file.name || file.label || getFileNameFromUrl(url)).trim(),
+                url
+            };
+        }
+
+        function getTaskReportFiles(task) {
+            const files = Array.isArray(task.report_files)
+                ? task.report_files.map(normalizeReportFile).filter(Boolean)
+                : [];
+
+            if (files.length) {
+                return files;
+            }
+
+            if (task.report_url) {
+                const legacyFile = normalizeReportFile(task.report_url);
+                return legacyFile ? [legacyFile] : [];
+            }
+
+            return [];
+        }
+
+        function getReportExportValue(task) {
+            return getTaskReportFiles(task)
+                .map(file => `${file.name} (${file.url})`)
+                .join(" | ");
+        }
+
+        function closeReportPanel() {
+            reportModal.hidden = true;
+            reportFileList.innerHTML = "";
+        }
+
+        function openReportPanel(task) {
+            const files = getTaskReportFiles(task);
+            if (!files.length) {
+                return;
+            }
+
+            reportModalTitle.textContent = task.experiment_id
+                ? `${task.experiment_id} attachments`
+                : "Task attachments";
+            reportModalCopy.textContent = task.trial_name || task.subject || "Download files attached to this finished task.";
+            reportFileList.innerHTML = files.map(file => `
+                <div class="report-file-card">
+                    <div>
+                        <div class="report-file-name">${escapeHtml(file.name)}</div>
+                        <div class="report-file-path">${escapeHtml(file.url)}</div>
+                    </div>
+                    <a class="report-download" href="${escapeHtml(file.url)}" download target="_blank" rel="noopener noreferrer">Download</a>
+                </div>
+            `).join("");
+            reportModal.hidden = false;
+        }
+
         function downloadCurrentProjectTable() {
             const project = projects[currentProjectKey];
             if (!project) {
@@ -794,7 +1016,7 @@
                 ["In Progress Tasks", stats.inProgress],
                 ["Pending Tasks", stats.pending],
                 [],
-                ["Experiment ID", "Subject", "Trial Type", "Trial Name", "Scheduled Date", "Expected Finish", "Cost", "Status", "Report URL"]
+                ["Experiment ID", "Subject", "Trial Type", "Trial Name", "Scheduled Date", "Expected Finish", "Cost", "Status", "Report Files"]
             ];
 
             const taskRows = rows.map(task => ([
@@ -806,7 +1028,7 @@
                 task.expected_finish_date || "",
                 task.cost || "",
                 task.status || "",
-                task.report_url || ""
+                getReportExportValue(task)
             ]));
 
             const csv = [...headerRows, ...taskRows]
@@ -979,7 +1201,18 @@
                 return;
             }
 
-                trialTableBody.innerHTML = tasks.map(task => `
+                trialTableBody.innerHTML = tasks.map((task, index) => {
+                const reportFiles = getTaskReportFiles(task);
+                const reportCell = reportFiles.length
+                    ? `
+                        <button type="button" class="report-link report-button" data-task-index="${index}">
+                            Open Report
+                        </button>
+                        <span class="report-count">${reportFiles.length} file${reportFiles.length === 1 ? "" : "s"}</span>
+                    `
+                    : "-";
+
+                return `
                 <tr>
                     <td><span class="task-code">${task.experiment_id}</span></td>
                     <td>
@@ -990,10 +1223,11 @@
                     <td>${formatDate(task.scheduled_date)}</td>
                     <td>${formatDate(task.expected_finish_date)}</td>
                     <td>${task.cost || "-"}</td>
-                    <td>${task.report_url ? `<a class="report-link" href="${task.report_url}" target="_blank" rel="noopener noreferrer">Open Report</a>` : "-"}</td>
+                    <td>${reportCell}</td>
                     <td><span class="status-badge ${statusClassMap[task.status]}">${task.status}</span></td>
                 </tr>
-            `).join("");
+            `;
+            }).join("");
         }
 
         function renderProject(projectKey) {
@@ -1056,6 +1290,29 @@
             });
 
             downloadTableButton.addEventListener("click", downloadCurrentProjectTable);
+            trialTableBody.addEventListener("click", event => {
+                const button = event.target.closest("[data-task-index]");
+                if (!button) {
+                    return;
+                }
+
+                const project = projects[currentProjectKey];
+                const task = project?.tasks?.[Number(button.dataset.taskIndex)];
+                if (task) {
+                    openReportPanel(task);
+                }
+            });
+            closeReportModal.addEventListener("click", closeReportPanel);
+            reportModal.addEventListener("click", event => {
+                if (event.target === reportModal) {
+                    closeReportPanel();
+                }
+            });
+            document.addEventListener("keydown", event => {
+                if (event.key === "Escape" && !reportModal.hidden) {
+                    closeReportPanel();
+                }
+            });
 
             renderProject(projectSelect.value);
         }
