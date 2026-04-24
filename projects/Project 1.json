@@ -120,6 +120,7 @@
       "scheduled_date": "2026-01-19",
       "expected_finish_date": "2026-01-19",
       "cost": "THB 9,520.00",
+      "report_url": "https://canva.link/1pf64srjrni0jxg",
       "status": "Completed"
     },
     {
@@ -130,6 +131,7 @@
       "scheduled_date": "2026-04-25",
       "expected_finish_date": "2026-04-30",
       "cost": "THB 9,520.00",
+      "report_url": "https://canva.link/1pf64srjrni0jxg",
       "status": "Completed"
     },
     {
@@ -140,6 +142,7 @@
       "scheduled_date": "2026-04-26",
       "expected_finish_date": "2026-04-30",
       "cost": "THB 9,520.00",
+      "report_url": "https://canva.link/1pf64srjrni0jxg",
       "status": "Completed"
     },
     {
@@ -150,6 +153,7 @@
       "scheduled_date": "2026-01-19",
       "expected_finish_date": "2026-01-19",
       "cost": "THB 9,520.00",
+      "report_url": "https://canva.link/tf12e8lkniffdt6",
       "status": "Completed"
     },
     {
@@ -160,6 +164,7 @@
       "scheduled_date": "2026-04-25",
       "expected_finish_date": "2026-04-30",
       "cost": "THB 9,520.00",
+      "report_url": "https://canva.link/tf12e8lkniffdt6",
       "status": "Completed"
     },
     {
@@ -170,6 +175,7 @@
       "scheduled_date": "2026-04-25",
       "expected_finish_date": "2026-04-30",
       "cost": "THB 9,520.00",
+      "report_url": "https://canva.link/tf12e8lkniffdt6",
       "status": "Completed"
     },
     {
@@ -180,6 +186,7 @@
       "scheduled_date": "2026-03-26",
       "expected_finish_date": "2026-03-31",
       "cost": "THB 12,520.00",
+      "report_url": "https://canva.link/1pf64srjrni0jxg",
       "status": "Completed"
     },
     {
@@ -190,6 +197,7 @@
       "scheduled_date": "2026-03-26",
       "expected_finish_date": "2026-03-31",
       "cost": "THB 12,520.00",
+      "report_url": "https://canva.link/tf12e8lkniffdt6",
       "status": "Completed"
     },
     {
@@ -200,6 +208,7 @@
       "scheduled_date": "2026-03-18",
       "expected_finish_date": "2026-03-19",
       "cost": "THB 15,120.00",
+      "report_url": "https://canva.link/1pf64srjrni0jxg",
       "status": "Completed"
     },
     {
@@ -210,6 +219,7 @@
       "scheduled_date": "2026-03-18",
       "expected_finish_date": "2026-03-19",
       "cost": "THB 15,120.00",
+      "report_url": "https://canva.link/tf12e8lkniffdt6",
       "status": "Completed"
     },
     {
@@ -220,6 +230,7 @@
       "scheduled_date": "2026-04-18",
       "expected_finish_date": "2026-04-19",
       "cost": "THB 15,120.00",
+      "report_url": "https://canva.link/1pf64srjrni0jxg",
       "status": "In Progress"
     },
     {
@@ -230,6 +241,7 @@
       "scheduled_date": "2026-04-18",
       "expected_finish_date": "2026-04-19",
       "cost": "THB 15,120.00",
+      "report_url": "https://canva.link/tf12e8lkniffdt6",
       "status": "In Progress"
     }
   ]
