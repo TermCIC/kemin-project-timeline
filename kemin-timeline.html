@@ -926,6 +926,10 @@
             return parts[parts.length - 1] || "Download file";
         }
 
+        function isExternalReportUrl(url) {
+            return /^https?:\/\//i.test(String(url || "").trim());
+        }
+
         function normalizeReportFile(file) {
             if (!file) {
                 return null;
@@ -984,14 +988,20 @@
             reportModalTitle.textContent = task.experiment_id
                 ? `${task.experiment_id} attachments`
                 : "Task attachments";
-            reportModalCopy.textContent = task.trial_name || task.subject || "Download files attached to this finished task.";
+            reportModalCopy.textContent = task.trial_name || task.subject || "Open links or download files attached to this finished task.";
             reportFileList.innerHTML = files.map(file => `
                 <div class="report-file-card">
                     <div>
                         <div class="report-file-name">${escapeHtml(file.name)}</div>
                         <div class="report-file-path">${escapeHtml(file.url)}</div>
                     </div>
-                    <a class="report-download" href="${escapeHtml(file.url)}" download target="_blank" rel="noopener noreferrer">Download</a>
+                    <a
+                        class="report-download"
+                        href="${escapeHtml(file.url)}"
+                        ${isExternalReportUrl(file.url) ? "" : "download"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >${isExternalReportUrl(file.url) ? "Open link" : "Download"}</a>
                 </div>
             `).join("");
             reportModal.hidden = false;

@@ -21,7 +21,7 @@
       "scheduled_date": "2025-11-20",
       "expected_finish_date": "2025-11-18",
       "cost": "THB 10,720.00",
-      "report_url": "./reports/SP1-001-report.pdf",
+      "report_url": "https://canva.link/0lkohena1uupax2",
       "status": "Completed"
     },
     {
@@ -32,6 +32,7 @@
       "scheduled_date": "2025-12-07",
       "expected_finish_date": "2025-12-13",
       "cost": "THB 11,320.00",
+      "report_url": "https://canva.link/0lkohena1uupax2",
       "status": "Completed"
     },
     {
@@ -42,6 +43,7 @@
       "scheduled_date": "2025-12-07",
       "expected_finish_date": "2025-12-13",
       "cost": "THB 11,320.00",
+      "report_url": "https://canva.link/0lkohena1uupax2",
       "status": "Completed"
     },
     {
@@ -52,6 +54,7 @@
       "scheduled_date": "2025-12-07",
       "expected_finish_date": "2025-12-13",
       "cost": "THB 11,320.00",
+      "report_url": "https://canva.link/0lkohena1uupax2",
       "status": "Completed"
     },
     {
@@ -62,6 +65,7 @@
       "scheduled_date": "2025-12-07",
       "expected_finish_date": "2025-12-13",
       "cost": "THB 11,320.00",
+      "report_url": "https://canva.link/0lkohena1uupax2",
       "status": "Completed"
     },
     {
@@ -72,6 +76,7 @@
       "scheduled_date": "2025-11-20",
       "expected_finish_date": "2025-11-19",
       "cost": "THB 10,720.00",
+      "report_url": "https://canva.link/0lkohena1uupax2",
       "status": "Completed"
     },
     {
@@ -82,6 +87,7 @@
       "scheduled_date": "2025-11-20",
       "expected_finish_date": "2025-11-20",
       "cost": "THB 10,720.00",
+      "report_url": "https://canva.link/0lkohena1uupax2",
       "status": "Completed"
     },
     {
@@ -92,6 +98,7 @@
       "scheduled_date": "2025-12-25",
       "expected_finish_date": "2025-12-29",
       "cost": "THB 18,000",
+      "report_url": "https://canva.link/0lkohena1uupax2",
       "status": "Completed"
     },
     {
@@ -102,6 +109,7 @@
       "scheduled_date": "2026-01-25",
       "expected_finish_date": "2026-01-29",
       "cost": "THB 18,000",
+      "report_url": "https://canva.link/0lkohena1uupax2",
       "status": "Completed"
     },
     {
@@ -172,7 +180,7 @@
       "scheduled_date": "2026-03-26",
       "expected_finish_date": "2026-03-31",
       "cost": "THB 12,520.00",
-      "status": "Pending"
+      "status": "Completed"
     },
     {
       "experiment_id": "TR2-001",
@@ -182,7 +190,7 @@
       "scheduled_date": "2026-03-26",
       "expected_finish_date": "2026-03-31",
       "cost": "THB 12,520.00",
-      "status": "Pending"
+      "status": "Completed"
     },
     {
       "experiment_id": "SZ3-001",
