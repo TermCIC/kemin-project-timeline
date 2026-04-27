@@ -231,7 +231,7 @@
       "expected_finish_date": "2026-04-19",
       "cost": "THB 15,120.00",
       "report_url": "https://canva.link/1pf64srjrni0jxg",
-      "status": "In Progress"
+      "status": "Completed"
     },
     {
       "experiment_id": "TR3-002",
@@ -242,7 +242,7 @@
       "expected_finish_date": "2026-04-19",
       "cost": "THB 15,120.00",
       "report_url": "https://canva.link/tf12e8lkniffdt6",
-      "status": "In Progress"
+      "status": "Completed"
     }
   ]
 }
