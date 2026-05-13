@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rough Data Link Board</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+        :root {
+            --bg: #f2ede4;
+            --ink: #1b2230;
+            --muted: #5f6675;
+            --line: rgba(27, 34, 48, 0.12);
+            --panel: rgba(255, 255, 255, 0.88);
+            --brand: #134e4a;
+            --brand-strong: #0f3f3c;
+            --accent: #c26a2d;
+            --radius-lg: 22px;
+            --radius-md: 14px;
+            --shadow: 0 20px 58px rgba(27, 34, 48, 0.13);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "IBM Plex Sans", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(19, 78, 74, 0.2), transparent 28%),
+                radial-gradient(circle at top right, rgba(194, 106, 45, 0.2), transparent 22%),
+                linear-gradient(180deg, #efe7da 0%, #f8f4ec 54%, #f2ede4 100%);
+            padding: 26px 16px;
+        }
+
+        .app {
+            max-width: 1220px;
+            margin: 0 auto;
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(14px);
+            box-shadow: var(--shadow);
+            padding: 24px;
+        }
+
+        h1 {
+            margin: 0;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(1.45rem, 2.2vw, 2rem);
+        }
+
+        .sub {
+            margin-top: 8px;
+            margin-bottom: 20px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .controls {
+            display: grid;
+            gap: 10px;
+            grid-template-columns: 1fr;
+            margin-bottom: 16px;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        input,
+        button,
+        textarea {
+            font: inherit;
+        }
+
+        #searchInput {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 11px 12px;
+            background: #fff;
+        }
+
+        button {
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            color: #fff;
+            background: var(--brand);
+        }
+
+        button:hover {
+            background: var(--brand-strong);
+        }
+
+        button.secondary {
+            background: #e7ece8;
+            color: var(--ink);
+        }
+
+        button.accent {
+            background: var(--accent);
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            background: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 760px;
+        }
+
+        th,
+        td {
+            padding: 10px 10px;
+            border-bottom: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f6f3ee;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--muted);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        td input {
+            width: 100%;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px 9px;
+        }
+
+        .url-link {
+            color: var(--brand);
+            text-decoration: none;
+        }
+
+        .url-link:hover {
+            text-decoration: underline;
+        }
+
+        .inline-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .inline-actions button {
+            padding: 7px 9px;
+            font-size: 0.86rem;
+        }
+
+        .status {
+            margin-top: 12px;
+            font-size: 0.92rem;
+            color: var(--muted);
+            min-height: 1.4em;
+        }
+
+        .share-box {
+            width: 100%;
+            margin-top: 14px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            min-height: 120px;
+            padding: 10px;
+            resize: vertical;
+            background: #fff;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 760px) {
+            .app {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <h1>Rough Data URL Share Page</h1>
+        <p class="sub">管理每個物種（species）每個實驗（experiment）的 rough data links，並快速產生可分享內容。</p>
+
+        <section class="controls">
+            <input id="searchInput" type="text" placeholder="Search species / experiment / note...">
+            <div class="toolbar">
+                <button id="addRowBtn" type="button">Add Row</button>
+                <button id="generateShareBtn" class="accent" type="button">Generate Share Text</button>
+                <button id="copyShareBtn" type="button">Copy Share Text</button>
+                <button id="exportBtn" class="secondary" type="button">Export JSON</button>
+                <button id="importBtn" class="secondary" type="button">Import JSON</button>
+                <input id="importFileInput" type="file" class="hidden" accept="application/json">
+            </div>
+        </section>
+
+        <section class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 18%;">Species</th>
+                        <th style="width: 22%;">Experiment</th>
+                        <th style="width: 32%;">Rough Data URL</th>
+                        <th style="width: 20%;">Notes</th>
+                        <th style="width: 8%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="linksTableBody"></tbody>
+            </table>
+        </section>
+
+        <div class="status" id="statusLine"></div>
+        <textarea id="shareOutput" class="share-box" placeholder="Share text will appear here..." readonly></textarea>
+    </main>
+
+    <script>
+        const STORAGE_KEY = "roughDataLinkBoard.v1";
+
+        const defaultRows = [
+            {
+                species: "Tilapia",
+                experiment: "Feed Trial A (Week 1)",
+                url: "https://example.com/tilapia/feed-trial-a/week-1",
+                notes: "Initial rough export"
+            },
+            {
+                species: "Shrimp",
+                experiment: "Water Quality Test B",
+                url: "https://example.com/shrimp/water-quality-test-b",
+                notes: "Pending validation"
+            }
+        ];
+
+        const state = {
+            rows: loadRows(),
+            filterText: ""
+        };
+
+        const tbody = document.getElementById("linksTableBody");
+        const searchInput = document.getElementById("searchInput");
+        const statusLine = document.getElementById("statusLine");
+        const shareOutput = document.getElementById("shareOutput");
+        const importFileInput = document.getElementById("importFileInput");
+
+        function loadRows() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return [...defaultRows];
+                const parsed = JSON.parse(raw);
+                if (!Array.isArray(parsed)) return [...defaultRows];
+                return parsed.map(normalizeRow).filter(Boolean);
+            } catch {
+                return [...defaultRows];
+            }
+        }
+
+        function normalizeRow(value) {
+            if (!value || typeof value !== "object") return null;
+            return {
+                species: String(value.species || "").trim(),
+                experiment: String(value.experiment || "").trim(),
+                url: String(value.url || "").trim(),
+                notes: String(value.notes || "").trim()
+            };
+        }
+
+        function saveRows() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state.rows));
+        }
+
+        function rowMatchesFilter(row, filterText) {
+            if (!filterText) return true;
+            const bag = `${row.species} ${row.experiment} ${row.url} ${row.notes}`.toLowerCase();
+            return bag.includes(filterText.toLowerCase());
+        }
+
+        function setStatus(message) {
+            statusLine.textContent = message;
+        }
+
+        function render() {
+            const filtered = state.rows.filter(row => rowMatchesFilter(row, state.filterText));
+            tbody.innerHTML = "";
+
+            filtered.forEach((row) => {
+                const rowIndex = state.rows.indexOf(row);
+                const tr = document.createElement("tr");
+
+                tr.appendChild(buildInputCell(row.species, (value) => updateField(rowIndex, "species", value)));
+                tr.appendChild(buildInputCell(row.experiment, (value) => updateField(rowIndex, "experiment", value)));
+                tr.appendChild(buildUrlCell(row.url, (value) => updateField(rowIndex, "url", value)));
+                tr.appendChild(buildInputCell(row.notes, (value) => updateField(rowIndex, "notes", value)));
+                tr.appendChild(buildActionCell(rowIndex));
+
+                tbody.appendChild(tr);
+            });
+
+            if (filtered.length === 0) {
+                const tr = document.createElement("tr");
+                const td = document.createElement("td");
+                td.colSpan = 5;
+                td.textContent = "No rows match current search.";
+                td.style.color = "#6b7280";
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+            }
+        }
+
+        function buildInputCell(value, onInput) {
+            const td = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = value;
+            input.addEventListener("input", (event) => onInput(event.target.value));
+            td.appendChild(input);
+            return td;
+        }
+
+        function buildUrlCell(value, onInput) {
+            const td = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "url";
+            input.placeholder = "https://...";
+            input.value = value;
+            input.addEventListener("input", (event) => onInput(event.target.value));
+
+            const link = document.createElement("a");
+            link.className = "url-link";
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = "Open";
+            link.href = value || "#";
+            link.style.marginLeft = "8px";
+            if (!value) {
+                link.style.pointerEvents = "none";
+                link.style.opacity = "0.4";
+            }
+
+            input.addEventListener("input", (event) => {
+                const next = event.target.value.trim();
+                link.href = next || "#";
+                const enabled = Boolean(next);
+                link.style.pointerEvents = enabled ? "auto" : "none";
+                link.style.opacity = enabled ? "1" : "0.4";
+            });
+
+            td.appendChild(input);
+            td.appendChild(link);
+            return td;
+        }
+
+        function buildActionCell(index) {
+            const td = document.createElement("td");
+            const actions = document.createElement("div");
+            actions.className = "inline-actions";
+
+            const cloneBtn = document.createElement("button");
+            cloneBtn.type = "button";
+            cloneBtn.className = "secondary";
+            cloneBtn.textContent = "Clone";
+            cloneBtn.addEventListener("click", () => {
+                const source = state.rows[index];
+                state.rows.splice(index + 1, 0, { ...source });
+                saveRows();
+                render();
+                setStatus("Row cloned.");
+            });
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.type = "button";
+            deleteBtn.textContent = "Delete";
+            deleteBtn.style.background = "#b42318";
+            deleteBtn.addEventListener("click", () => {
+                state.rows.splice(index, 1);
+                saveRows();
+                render();
+                setStatus("Row deleted.");
+            });
+
+            actions.appendChild(cloneBtn);
+            actions.appendChild(deleteBtn);
+            td.appendChild(actions);
+            return td;
+        }
+
+        function updateField(index, field, value) {
+            state.rows[index][field] = value;
+            saveRows();
+        }
+
+        function addRow() {
+            state.rows.push({ species: "", experiment: "", url: "", notes: "" });
+            saveRows();
+            render();
+            setStatus("New empty row added.");
+        }
+
+        function generateShareText() {
+            const lines = [];
+            lines.push("Rough Data Links");
+            lines.push("================");
+
+            state.rows.forEach((row, index) => {
+                const species = row.species || "(No species)";
+                const experiment = row.experiment || "(No experiment)";
+                const url = row.url || "(No URL)";
+                const notes = row.notes ? ` | Notes: ${row.notes}` : "";
+                lines.push(`${index + 1}. ${species} | ${experiment} | ${url}${notes}`);
+            });
+
+            shareOutput.value = lines.join("\n");
+            setStatus("Share text generated.");
+        }
+
+        async function copyShareText() {
+            if (!shareOutput.value.trim()) {
+                generateShareText();
+            }
+            try {
+                await navigator.clipboard.writeText(shareOutput.value);
+                setStatus("Share text copied to clipboard.");
+            } catch {
+                setStatus("Clipboard failed. You can manually copy from the textbox.");
+            }
+        }
+
+        function exportJson() {
+            const blob = new Blob([JSON.stringify(state.rows, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "rough-data-links.json";
+            a.click();
+            URL.revokeObjectURL(url);
+            setStatus("JSON exported.");
+        }
+
+        function importJsonFile(file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const payload = JSON.parse(String(reader.result || "[]"));
+                    if (!Array.isArray(payload)) {
+                        throw new Error("Invalid format");
+                    }
+                    const nextRows = payload.map(normalizeRow).filter(Boolean);
+                    state.rows = nextRows;
+                    saveRows();
+                    render();
+                    setStatus(`Imported ${nextRows.length} row(s).`);
+                } catch {
+                    setStatus("Import failed. Please use a valid JSON array.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        document.getElementById("addRowBtn").addEventListener("click", addRow);
+        document.getElementById("generateShareBtn").addEventListener("click", generateShareText);
+        document.getElementById("copyShareBtn").addEventListener("click", copyShareText);
+        document.getElementById("exportBtn").addEventListener("click", exportJson);
+        document.getElementById("importBtn").addEventListener("click", () => importFileInput.click());
+
+        searchInput.addEventListener("input", (event) => {
+            state.filterText = event.target.value.trim();
+            render();
+        });
+
+        importFileInput.addEventListener("change", (event) => {
+            const [file] = event.target.files || [];
+            if (file) {
+                importJsonFile(file);
+            }
+            event.target.value = "";
+        });
+
+        render();
+        generateShareText();
+    </script>
+</body>
+</html>
